@@ -21,6 +21,7 @@
 
 """
 Run Gaussian Filter from Scipy on Project/Dataset/Image/Screen/Plate/Well.
+This an OMERO script that runs server-side.
 """
 
 import omero

@@ -19,7 +19,10 @@
 
 # ------------------------------------------------------------------------------
 
-"""Simple FRAP plots from Rectangles on images."""
+"""
+Simple FRAP plots from Rectangles on images.
+This an OMERO script that runs server-side.
+"""
 
 import omero
 
