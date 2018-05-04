@@ -23,8 +23,14 @@
 
 
 import omero.scripts as scripts
-from omero.gateway import BlitzGateway, MapAnnotationWrapper
+from omero.gateway import BlitzGateway, MapAnnotationWrapper,\
+    FileAnnotationWrapper
 from omero.rtypes import unwrap, rstring, rlong, robject
+from omero.grid import DoubleColumn, ImageColumn
+from omero.model import FileAnnotationI, OriginalFileI
+from omero.constants.namespaces import NSBULKANNOTATIONS
+
+from collections import defaultdict
 
 DEFAULT_FILE_NAME = "roi_intensities.csv"
 
@@ -128,6 +134,23 @@ COLUMN_NAMES = ["image_id",
                 "mean",
                 "std_dev"]
 
+SUMMARY_COL_NAMES = ["shape_count",
+                     "min_intensity",
+                     "max_intensity",
+                     "mean_intensity",
+                     "min_points",
+                     "max_points",
+                     "mean_points"]
+
+
+def link_table(conn, table, project):
+    orig_file = table.getOriginalFile()
+    file_ann = FileAnnotationWrapper(conn)
+    file_ann.setNs(NSBULKANNOTATIONS)
+    file_ann._obj.file = OriginalFileI(orig_file.id.val, False)
+    file_ann.save()
+    project.linkAnnotation(file_ann)
+
 
 def write_csv(conn, export_data, script_params):
     """Write the list of data to a CSV file and create a file annotation."""
@@ -148,31 +171,78 @@ def write_csv(conn, export_data, script_params):
     return conn.createFileAnnfromLocalFile(file_name, mimetype="text/csv")
 
 
+def get_summary_data_for_image(conn, image_id, export_data, script_params):
+    """Summarise ROIs as dict for this Image."""
+    # get all ROI data for this image
+    filter_ch = script_params.get('Filter_Shapes_By_Channel', '')
+    data = [d for d in export_data if d['image_id'] == image_id]
+    if len(data) == 0:
+        return None
+    min_intensity = min([d['min'] for d in data])
+    max_intensity = max([d['max'] for d in data])
+    mean_intensity = sum([d['mean'] for d in data]) / len(data)
+    min_points = min([d['points'] for d in data])
+    max_points = max([d['points'] for d in data])
+    mean_points = sum([d['points'] for d in data]) / len(data)
+
+    return {
+        "filter_shapes_by_channel": filter_ch,
+        "shape_count": len(data),
+        "min_intensity": min_intensity,
+        "max_intensity": max_intensity,
+        "mean_intensity": mean_intensity,
+        "min_points": min_points,
+        "max_points": max_points,
+        "mean_points": mean_points,
+    }
+
+
+def save_table(conn, images, export_data, script_params):
+    """Summarise ROIs as Table (1 row per Image) linked to Project."""
+
+    resources = conn.c.sf.sharedResources()
+    repository_id = resources.repositories().descriptions[0].getId().getValue()
+    table_name = "batch_roi_export"
+    table = resources.newTable(repository_id, table_name)
+
+    # Summarise data into columns
+    image_ids = [i.id for i in images]
+    col_data = defaultdict(list)
+
+    for image_id in image_ids:
+        data = get_summary_data_for_image(conn, image_id, export_data,
+                                          script_params)
+        for key in SUMMARY_COL_NAMES:
+            col_data[key].append(data[key] if data is not None else 0)
+
+    # Create table
+    img_column = ImageColumn('Image', '', image_ids)
+    cols = [DoubleColumn(k, '', col_data[k]) for k in SUMMARY_COL_NAMES]
+    data = [img_column] + cols
+    table.initialize(data)
+    table.addData(data)
+    table.close()
+
+    # Link Table to first Project we find
+    project = None
+    for image in images:
+        project = image.getProject()
+        if project is not None:
+            break
+    if project is None:
+        log("No Project found to link table")
+    else:
+        link_table(conn, table, project)
+
+
 def save_map_annotations(conn, images, export_data, script_params):
     """Summarise ROIs as Key-Value pairs for each Image."""
-    filter_ch = script_params.get("Filter_Shapes_By_Channel")
     for image in images:
-        # get all ROI data for this image
-        data = [d for d in export_data if d['image_id'] == image.id]
-        if len(data) == 0:
+        data = get_summary_data_for_image(conn, image.id, export_data,
+                                          script_params)
+        if data is None:
             continue
-        min_intensity = min([d['min'] for d in data])
-        max_intensity = max([d['max'] for d in data])
-        mean_intensity = sum([d['mean'] for d in data]) / len(data)
-        min_points = min([d['points'] for d in data])
-        max_points = max([d['points'] for d in data])
-        mean_points = sum([d['points'] for d in data]) / len(data)
-
-        key_value_data = [
-            ["filter_shapes_by_channel", str(filter_ch)],
-            ["shape_count", str(len(data))],
-            ["min_intensity", str(min_intensity)],
-            ["max_intensity", str(max_intensity)],
-            ["mean_intensity", str(mean_intensity)],
-            ["min_points", str(min_points)],
-            ["max_points", str(max_points)],
-            ["mean_points", str(mean_points)],
-        ]
+        key_value_data = [[k, str(data[k])] for k in SUMMARY_COL_NAMES]
         map_ann = MapAnnotationWrapper(conn)
         # Use 'client' namespace to allow editing in Insight & web
         map_ann.setNs("omero.batch_roi_export.map_ann")
@@ -191,12 +261,19 @@ def link_annotation(objects, file_ann):
 def batch_roi_export(conn, script_params):
     """Main entry point. Get images, process them and return result."""
     images = []
+    datasets = None
+    if script_params['Data_Type'] == "Project":
+        datasets = []
+        for project in conn.getObjects("Project", script_params['IDs']):
+            datasets.extend(list(project.listChildren()))
+    elif script_params['Data_Type'] == "Dataset":
+        datasets = conn.getObjects("Dataset", script_params['IDs'])
 
-    if script_params['Data_Type'] == "Image":
-        images = list(conn.getObjects("Image", script_params['IDs']))
-    else:
-        for dataset in conn.getObjects("Dataset", script_params['IDs']):
+    if datasets is not None:
+        for dataset in datasets:
             images.extend(list(dataset.listChildren()))
+    else:
+        images = list(conn.getObjects("Image", script_params['IDs']))
 
     log("Processing %s images..." % len(images))
     if len(images) == 0:
@@ -217,9 +294,13 @@ def batch_roi_export(conn, script_params):
         else:
             link_annotation(images, file_ann)
 
-    # Create Map_Annotation
+    # Create Map_Annotations on each image
     if script_params.get("Save_As_Key-Value"):
         save_map_annotations(conn, images, export_data, script_params)
+
+    # Create single OMERO.table
+    if script_params.get("Create_Table"):
+        save_table(conn, images, export_data, script_params)
 
     message = "Exported %s shapes" % len(export_data)
     return file_ann, message
@@ -227,7 +308,7 @@ def batch_roi_export(conn, script_params):
 
 def run_script():
     """The main entry point of the script, as called by the client."""
-    data_types = [rstring('Dataset'), rstring('Image')]
+    data_types = [rstring('Project'), rstring('Dataset'), rstring('Image')]
 
     client = scripts.client(
         'Batch_ROI_Export.py',
@@ -269,6 +350,11 @@ def run_script():
         scripts.Bool(
             "Save_As_Key-Value",  grouping="7", default=True,
             description="Summarise ROIs as Key-Value pairs on each Image."),
+
+        scripts.Bool(
+            "Create_Table",  grouping="8", default=True,
+            description=("Summarise ROIs as Table (1 row per image)"
+                         " attached to parent Project")),
 
         authors=["William Moore", "OME Team"],
         institutions=["University of Dundee"],
