@@ -61,6 +61,13 @@ def get_export_data(conn, script_params, image):
         # convert to zero-based index
         filter_ch = filter_ch - 1
 
+    # For idr0021 use-case, we want to pick filter_channel dynamically...
+    # First channel where channel name matches Dataset name.
+    dataset_name = image.getParent().name
+    for c, name in enumerate(image.getChannelLabels()):
+        if name in dataset_name:
+            filter_ch = c
+
     ch_names = image.getChannelLabels()
 
     ch_names = [ch_name.replace(",", ".") for ch_name in ch_names]
@@ -177,6 +184,14 @@ def get_summary_data_for_image(conn, image, export_data, script_params):
     """Summarise ROIs as dict for this Image."""
     # get all ROI data for this image
     filter_ch = script_params.get('Filter_Shapes_By_Channel', '')
+
+    # For idr0021 use-case, we want to pick filter_channel dynamically...
+    # First channel where channel name matches Dataset name.
+    dataset_name = image.getParent().name
+    for c, name in enumerate(image.getChannelLabels()):
+        if name in dataset_name:
+            filter_ch = c + 1
+            break
 
     data = [d for d in export_data if d['image_id'] == image.id]
     if len(data) == 0:
