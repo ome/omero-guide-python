@@ -60,6 +60,7 @@ def get_export_data(conn, script_params, image):
     if filter_ch is not None:
         # convert to zero-based index
         filter_ch = filter_ch - 1
+
     ch_names = image.getChannelLabels()
 
     ch_names = [ch_name.replace(",", ".") for ch_name in ch_names]
@@ -134,7 +135,8 @@ COLUMN_NAMES = ["image_id",
                 "mean",
                 "std_dev"]
 
-SUMMARY_COL_NAMES = ["shape_count",
+SUMMARY_COL_NAMES = ["filter_shapes_by_channel",
+                     "shape_count",
                      "min_intensity",
                      "max_intensity",
                      "mean_intensity",
@@ -171,11 +173,12 @@ def write_csv(conn, export_data, script_params):
     return conn.createFileAnnfromLocalFile(file_name, mimetype="text/csv")
 
 
-def get_summary_data_for_image(conn, image_id, export_data, script_params):
+def get_summary_data_for_image(conn, image, export_data, script_params):
     """Summarise ROIs as dict for this Image."""
     # get all ROI data for this image
     filter_ch = script_params.get('Filter_Shapes_By_Channel', '')
-    data = [d for d in export_data if d['image_id'] == image_id]
+
+    data = [d for d in export_data if d['image_id'] == image.id]
     if len(data) == 0:
         return None
     min_intensity = min([d['min'] for d in data])
@@ -209,8 +212,8 @@ def save_table(conn, images, export_data, script_params):
     image_ids = [i.id for i in images]
     col_data = defaultdict(list)
 
-    for image_id in image_ids:
-        data = get_summary_data_for_image(conn, image_id, export_data,
+    for image in images:
+        data = get_summary_data_for_image(conn, image, export_data,
                                           script_params)
         for key in SUMMARY_COL_NAMES:
             col_data[key].append(data[key] if data is not None else 0)
@@ -238,7 +241,7 @@ def save_table(conn, images, export_data, script_params):
 def save_map_annotations(conn, images, export_data, script_params):
     """Summarise ROIs as Key-Value pairs for each Image."""
     for image in images:
-        data = get_summary_data_for_image(conn, image.id, export_data,
+        data = get_summary_data_for_image(conn, image, export_data,
                                           script_params)
         if data is None:
             continue
