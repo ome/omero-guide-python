@@ -76,11 +76,11 @@ def get_export_data(conn, script_params, image):
     result = roi_service.findByImage(image.getId(), None)
 
     export_data = []
-    print "Filter_Shapes_By_Channel", filter_ch
+    log("Filter_Shapes_By_Channel: %s" % filter_ch)
     for roi in result.rois:
         for shape in roi.copyShapes():
             if filter_ch is not None and filter_ch != unwrap(shape.theC):
-                print filter_ch, " != ", unwrap(shape.theC)
+                log("%s != %s" % (filter_ch, unwrap(shape.theC)))
                 continue
             label = unwrap(shape.getTextValue())
             # wrap label in double quotes in case it contains comma
