@@ -33,6 +33,7 @@ from omero.constants.namespaces import NSBULKANNOTATIONS
 from collections import defaultdict
 
 DEFAULT_FILE_NAME = "roi_intensities.csv"
+BATCH_ROI_EXPORT_NS = "omero.batch_roi_export.map_ann"
 
 
 def log(data):
@@ -262,8 +263,8 @@ def save_map_annotations(conn, images, export_data, script_params):
             continue
         key_value_data = [[k, str(data[k])] for k in SUMMARY_COL_NAMES]
         map_ann = MapAnnotationWrapper(conn)
-        # Use 'client' namespace to allow editing in Insight & web
-        map_ann.setNs("omero.batch_roi_export.map_ann")
+        # Use custom namespace to allow finding/deleting map_anns we create
+        map_ann.setNs(BATCH_ROI_EXPORT_NS)
         map_ann.setValue(key_value_data)
         map_ann.save()
         image.linkAnnotation(map_ann)
