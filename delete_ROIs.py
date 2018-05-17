@@ -17,23 +17,25 @@
 #
 # ------------------------------------------------------------------------------
 
-# Delete Annotations of a particular namespace from all Images in a Dataset
+# Delete ROIs from all Images in a Dataset
 
 from omero.gateway import BlitzGateway
 
 USERNAME = "username"
 PASSWORD = "password"
-conn = BlitzGateway(USERNAME, PASSWORD, host="outreach.openmicroscopy.org", port=4064)
+conn = BlitzGateway(USERNAME, PASSWORD, host="outreach.openmicroscopy.org",
+				    port=4064)
 conn.connect()
 
 # Edit these values
-dataset_id = 4501
-ns = "omero.batch_roi_export.map_ann"
+dataset_id = 25096
 
 dataset = conn.getObject("Dataset", dataset_id)
+roi_service = conn.getRoiService()
 
 for image in dataset.listChildren():
-    ann_ids = [a.id for a in image.listAnnotations(ns)]
-    if len(ann_ids) > 0:
-        print "Deleting %s anns..." % len(ann_ids)
-        conn.deleteObjects('Annotation', ann_ids)
+    result = roi_service.findByImage(image.getId(), None, conn.SERVICE_OPTS)
+    if result is not None:
+        roi_ids = [roi.id.val for roi in result.rois]
+        print "Deleting %s anns..." % len(roi_ids)
+        conn.deleteObjects("Roi", roi_ids)
