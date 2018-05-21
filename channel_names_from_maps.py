@@ -19,12 +19,9 @@
 
 # Script uses map annotations on each Image to rename channels
 
+import argparse
 from omero.gateway import BlitzGateway
 
-USERNAME = "username"
-PASSWORD = "password"
-conn = BlitzGateway(USERNAME, PASSWORD, host="outreach.openmicroscopy.org", port=4064)
-conn.connect()
 
 NAMESPACE = "openmicroscopy.org/omero/bulk_annotations"
 MAP_KEY = "Channels"
@@ -32,25 +29,51 @@ MAP_KEY = "Channels"
 # TO BE MODIFIED
 project_id = 4501
 
-project = conn.getObject("Project", project_id)
 
-for dataset in project.listChildren():
-    print "\n\nDataset", dataset.id, dataset.name
-    for image in dataset.listChildren():
+def run(username, password, host, port):
 
-        print "Image", image.id, image.name
-        ann = image.getAnnotation(NAMESPACE)
-        if ann is None:
-            print " No annotation found"
-            continue
-        key_values = ann.getValue()
-        channels_value = [kv[1] for kv in key_values if kv[0] == MAP_KEY]
-        if len(channels_value) == 0:
-            print " No Key-Value found for key:", MAP_KEY
-        channels = channels_value[0].split("; ")
-        print "Channels", channels
-        name_dict = {}
-        for c, ch_name in enumerate(channels):
-            name_dict[c + 1] = ch_name.split(":")[1]
-        conn.setChannelNames("Image", [image.id], name_dict, channelCount=None)
+    conn = BlitzGateway(username, password, host=host, port=port)
+    try:
+        conn.connect()
+        project = conn.getObject("Project", project_id)
 
+        for dataset in project.listChildren():
+            print "\n\nDataset", dataset.id, dataset.name
+            for image in dataset.listChildren():
+
+                print "Image", image.id, image.name
+                ann = image.getAnnotation(NAMESPACE)
+                if ann is None:
+                    print " No annotation found"
+                    continue
+                keys = ann.getValue()
+                values = [kv[1] for kv in keys if kv[0] == MAP_KEY]
+                if len(values) == 0:
+                    print " No Key-Value found for key:", MAP_KEY
+                channels = values[0].split("; ")
+                print "Channels", channels
+                name_dict = {}
+                for c, ch_name in enumerate(channels):
+                    name_dict[c + 1] = ch_name.split(":")[1]
+                conn.setChannelNames("Image", [image.id], name_dict,
+                                     channelCount=None)
+    except Exception as exc:
+            print "Error while changing names: %s" % str(exc)
+    finally:
+        conn.close()
+
+
+def main(args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('username')
+    parser.add_argument('password')
+    parser.add_argument('--server', default="outreach.openmicroscopy.org",
+                        help="OMERO server hostname")
+    parser.add_argument('--port', default=4064, help="OMERO server port")
+    args = parser.parse_args(args)
+    run(args.username, args.password, args.server, args.port)
+
+
+if __name__ == '__main__':
+    import sys
+    main(sys.argv[1:])
