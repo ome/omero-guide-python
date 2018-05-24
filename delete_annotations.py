@@ -22,10 +22,8 @@
 import argparse
 from omero.gateway import BlitzGateway
 
-ns = "omero.batch_roi_export.map_ann"
 
-
-def run(username, password, dataset_id, host, port):
+def run(username, password, dataset_id, ns, host, port):
 
     conn = BlitzGateway(username, password, host=host, port=port)
     try:
@@ -47,12 +45,15 @@ def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('username')
     parser.add_argument('password')
-    parser.add_argument('target')
+    parser.add_argument('dataset_id')
+    parser.add_argument('--namespace', default="omero.batch_roi_export.map_ann",
+                        help="The namespace of the annotations")
     parser.add_argument('--server', default="outreach.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.username, args.password, args.target, args.server, args.port)
+    run(args.username, args.password, args.dataset_id, args.namespace,
+    	args.server, args.port)
 
 
 if __name__ == '__main__':

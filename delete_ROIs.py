@@ -47,12 +47,12 @@ def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('username')
     parser.add_argument('password')
-    parser.add_argument('target')
+    parser.add_argument('dataset_id')
     parser.add_argument('--server', default="outreach.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.username, args.password, args.target, args.server, args.port)
+    run(args.username, args.password, args.dataset_id, args.server, args.port)
 
 
 if __name__ == '__main__':

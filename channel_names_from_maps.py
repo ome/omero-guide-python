@@ -26,11 +26,8 @@ from omero.gateway import BlitzGateway
 NAMESPACE = "openmicroscopy.org/omero/bulk_annotations"
 MAP_KEY = "Channels"
 
-# TO BE MODIFIED
-project_id = 4501
 
-
-def run(username, password, host, port):
+def run(username, password, project_id, host, port):
 
     conn = BlitzGateway(username, password, host=host, port=port)
     try:
@@ -67,11 +64,12 @@ def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('username')
     parser.add_argument('password')
+    parser.add_argument('project_id')
     parser.add_argument('--server', default="outreach.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.username, args.password, args.server, args.port)
+    run(args.username, args.password, args.project_id, args.server, args.port)
 
 
 if __name__ == '__main__':
