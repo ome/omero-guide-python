@@ -1,0 +1,15 @@
+---
+# Specification of rendering settings
+
+channels:
+  1:
+    # green
+    color: "00FF00"
+    min: 0
+    max: 255
+  2:
+    # red
+    color: "FF0000"
+    min: 0
+    max: 255
+
