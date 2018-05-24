@@ -3,13 +3,15 @@
 
 channels:
   1:
-    # green
-    color: "00FF00"
+    label: "CENT2"
     min: 0
     max: 255
   2:
-    # red
-    color: "FF0000"
+    label: "PCNT"
+    min: 0
+    max: 255
+  3:
+    label: "CDK5RAP2-C"
     min: 0
     max: 255
 

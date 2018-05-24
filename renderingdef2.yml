@@ -3,13 +3,15 @@
 
 channels:
   1:
-    # green
-    color: "00FF00"
+    # red
+    color: "FF0000"
+    label: "CEP192-M"
     min: 30
-    max: 10640
+    max: 255
   2:
     # blue
     color: "0000FF"
+    label: "CENT2"
     min: 45
-    max: 5359
+    max: 5000
 
