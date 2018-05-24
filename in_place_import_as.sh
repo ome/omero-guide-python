@@ -37,7 +37,7 @@ OMEUSER=${OMEUSER:-user}
 for ((i=1;i<=$NUMBER;i++));
 do  $OMEROPATH login --sudo ${IMPORTER} -u $OMEUSER-$i -s $HOST -w $PASSWORD
     DatasetId=$($OMEROPATH obj new Dataset name=$FOLDER)
-    $OMEROPATH import -d $DatasetId -- --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
+    $OMEROPATH import -d $DatasetId --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
     $OMEROPATH logout
 done
 echo Finishing
