@@ -23,21 +23,28 @@
 # privileges on behalf of other users 
 # i.e. after import each of the 40 users has their own batch of data.
 # Data can also be imported for trainers.
-# To import for trainers run for example
+# To import a dataset for trainers run for example
 # OMEUSER=trainer NUMBER=2 bash in_place_import_as.sh
+# To import a plate for trainers run for example
+# OMEUSER=trainer NUMBER=2 DATATYPE=plate FOLDER=HCS bash in_place_import_as.sh
 
 echo Starting
-IMPORTER=${IMPORTER:-importer}
+SUDOER=${SUDOER:-importer1}
 OMEROPATH=${OMEROPATH:-/opt/omero/server/OMERO.server/bin/omero}
 PASSWORD=${PASSWORD:-ome}
 HOST=${HOST:-outreach.openmicroscopy.org}
 FOLDER=${FOLDER:-siRNAi-HeLa}
 NUMBER=${NUMBER:-40}
 OMEUSER=${OMEUSER:-user}
+DATATYPE=${DATATYPE:-dataset}
 for ((i=1;i<=$NUMBER;i++));
-do  $OMEROPATH login --sudo ${IMPORTER} -u $OMEUSER-$i -s $HOST -w $PASSWORD
-    DatasetId=$($OMEROPATH obj new Dataset name=$FOLDER)
-    $OMEROPATH import -d $DatasetId -- --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
+do  $OMEROPATH login --sudo ${SUDOER} -u $OMEUSER-$i -s $HOST -w $PASSWORD
+    if [ "$DATATYPE" = "dataset" ]; then
+        DatasetId=$($OMEROPATH obj new Dataset name=$FOLDER)
+        $OMEROPATH import -d $DatasetId --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
+    elif [ "$DATATYPE" = "plate" ]; then
+        $OMEROPATH import --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
+    fi
     $OMEROPATH logout
 done
 echo Finishing
