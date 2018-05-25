@@ -25,6 +25,8 @@
 # Data can also be imported for trainers.
 # To import for trainers run for example
 # OMEUSER=trainer NUMBER=2 bash in_place_import.sh
+# To import a plate for trainers run for example
+# OMEUSER=trainer NUMBER=2 DATATYPE=plate FOLDER=HCS bash in_place_import.sh
 
 echo Starting
 OMEROPATH=${OMEROPATH:-/opt/omero/server/OMERO.server/bin/omero}

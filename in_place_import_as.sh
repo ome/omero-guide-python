@@ -23,8 +23,10 @@
 # privileges on behalf of other users 
 # i.e. after import each of the 40 users has their own batch of data.
 # Data can also be imported for trainers.
-# To import for trainers run for example
+# To import a dataset for trainers run for example
 # OMEUSER=trainer NUMBER=2 bash in_place_import_as.sh
+# To import a plate for trainers run for example
+# OMEUSER=trainer NUMBER=2 DATATYPE=plate FOLDER=HCS bash in_place_import_as.sh
 
 echo Starting
 IMPORTER=${IMPORTER:-importer1}
