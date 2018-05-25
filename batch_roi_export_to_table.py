@@ -97,6 +97,9 @@ def get_export_data(conn, script_params, image):
             t_indexes = [the_t]
             if the_t is None and all_planes:
                 t_indexes = range(image.getSizeT())
+            # Get the C shape is on.
+            # This is independent of ch_indexes we're getting intensities for
+            the_c = unwrap(shape.theC)
 
             # get pixel intensities
             for z in z_indexes:
@@ -116,6 +119,7 @@ def get_export_data(conn, script_params, image):
                             "text": label,
                             "z": z + 1 if z is not None else "",
                             "t": t + 1 if t is not None else "",
+                            "c": the_c + 1 if the_c is not None else "",
                             "channel": ch_names[ch_index],
                             "points": stats[0].pointsCount[c] if stats else "",
                             "min": stats[0].min[c] if stats else "",
@@ -135,6 +139,7 @@ COLUMN_NAMES = ["image_id",
                 "text",
                 "z",
                 "t",
+                "c",
                 "channel",
                 "points",
                 "min",
