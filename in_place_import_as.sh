@@ -27,17 +27,22 @@
 # OMEUSER=trainer NUMBER=2 bash in_place_import_as.sh
 
 echo Starting
-IMPORTER=${IMPORTER:-importer}
+IMPORTER=${IMPORTER:-importer1}
 OMEROPATH=${OMEROPATH:-/opt/omero/server/OMERO.server/bin/omero}
 PASSWORD=${PASSWORD:-ome}
 HOST=${HOST:-outreach.openmicroscopy.org}
 FOLDER=${FOLDER:-siRNAi-HeLa}
 NUMBER=${NUMBER:-40}
 OMEUSER=${OMEUSER:-user}
+DATATYPE=${DATATYPE:-dataset}
 for ((i=1;i<=$NUMBER;i++));
 do  $OMEROPATH login --sudo ${IMPORTER} -u $OMEUSER-$i -s $HOST -w $PASSWORD
-    DatasetId=$($OMEROPATH obj new Dataset name=$FOLDER)
-    $OMEROPATH import -d $DatasetId --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
+    if [ "$DATATYPE" = "dataset" ]; then
+        DatasetId=$($OMEROPATH obj new Dataset name=$FOLDER)
+        $OMEROPATH import -d $DatasetId --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
+    elif [ "$DATATYPE" = "plate" ]; then
+        $OMEROPATH import --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
+    fi
     $OMEROPATH logout
 done
 echo Finishing
