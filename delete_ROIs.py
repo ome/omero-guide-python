@@ -19,23 +19,42 @@
 
 # Delete ROIs from all Images in a Dataset
 
+import argparse
 from omero.gateway import BlitzGateway
 
-USERNAME = "username"
-PASSWORD = "password"
-conn = BlitzGateway(USERNAME, PASSWORD, host="outreach.openmicroscopy.org",
-				    port=4064)
-conn.connect()
 
-# Edit these values
-dataset_id = 25096
+def run(username, password, dataset_id, host, port):
 
-dataset = conn.getObject("Dataset", dataset_id)
-roi_service = conn.getRoiService()
+    conn = BlitzGateway(username, password, host=host, port=port)
+    try:
+        conn.connect()
+        dataset = conn.getObject("Dataset", dataset_id)
+        roi_service = conn.getRoiService()
+        for image in dataset.listChildren():
+            result = roi_service.findByImage(image.getId(), None,
+                                             conn.SERVICE_OPTS)
+            if result is not None:
+                roi_ids = [roi.id.val for roi in result.rois]
+                print "Deleting %s ROIs..." % len(roi_ids)
+                conn.deleteObjects("Roi", roi_ids)
+    except Exception as exc:
+            print "Error while deleting annotations: %s" % str(exc)
+    finally:
+        conn.close()
 
-for image in dataset.listChildren():
-    result = roi_service.findByImage(image.getId(), None, conn.SERVICE_OPTS)
-    if result is not None:
-        roi_ids = [roi.id.val for roi in result.rois]
-        print "Deleting %s anns..." % len(roi_ids)
-        conn.deleteObjects("Roi", roi_ids)
+
+def main(args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('username')
+    parser.add_argument('password')
+    parser.add_argument('dataset_id')
+    parser.add_argument('--server', default="outreach.openmicroscopy.org",
+                        help="OMERO server hostname")
+    parser.add_argument('--port', default=4064, help="OMERO server port")
+    args = parser.parse_args(args)
+    run(args.username, args.password, args.dataset_id, args.server, args.port)
+
+
+if __name__ == '__main__':
+    import sys
+    main(sys.argv[1:])
