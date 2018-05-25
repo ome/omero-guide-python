@@ -19,21 +19,43 @@
 
 # Delete Annotations of a particular namespace from all Images in a Dataset
 
+import argparse
 from omero.gateway import BlitzGateway
 
-USERNAME = "username"
-PASSWORD = "password"
-conn = BlitzGateway(USERNAME, PASSWORD, host="outreach.openmicroscopy.org", port=4064)
-conn.connect()
 
-# Edit these values
-dataset_id = 4501
-ns = "omero.batch_roi_export.map_ann"
+def run(username, password, dataset_id, ns, host, port):
 
-dataset = conn.getObject("Dataset", dataset_id)
+    conn = BlitzGateway(username, password, host=host, port=port)
+    try:
+        conn.connect()
+        dataset = conn.getObject("Dataset", dataset_id)
 
-for image in dataset.listChildren():
-    ann_ids = [a.id for a in image.listAnnotations(ns)]
-    if len(ann_ids) > 0:
-        print "Deleting %s anns..." % len(ann_ids)
-        conn.deleteObjects('Annotation', ann_ids)
+        for image in dataset.listChildren():
+            ann_ids = [a.id for a in image.listAnnotations(ns)]
+            if len(ann_ids) > 0:
+                print "Deleting %s annotations..." % len(ann_ids)
+                conn.deleteObjects('Annotation', ann_ids)
+    except Exception as exc:
+            print "Error while deleting annotations: %s" % str(exc)
+    finally:
+        conn.close()
+
+
+def main(args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('username')
+    parser.add_argument('password')
+    parser.add_argument('dataset_id')
+    parser.add_argument('--namespace', default="omero.batch_roi_export.map_ann",
+                        help="The namespace of the annotations")
+    parser.add_argument('--server', default="outreach.openmicroscopy.org",
+                        help="OMERO server hostname")
+    parser.add_argument('--port', default=4064, help="OMERO server port")
+    args = parser.parse_args(args)
+    run(args.username, args.password, args.dataset_id, args.namespace,
+    	args.server, args.port)
+
+
+if __name__ == '__main__':
+    import sys
+    main(sys.argv[1:])
