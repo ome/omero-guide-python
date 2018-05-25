@@ -2,12 +2,11 @@
 #
 # The render plugin currently doesn't support applying a set of rendering settings to a 
 # whole dataset. This script just itereates over a tab separated mapping file which
-# maps a dataset name to a renderings settings file (can be json or yml).
+# maps a dataset name to a rendering settings file (can be json or yml).
 # It retrieves the images ids of the datasets and calls the render plugin for each
 # of the images. 
 #
-# Note: 
-# - You need to log in first before running this script.
+# Note:
 # - If any of the datasets has more than 100 images increase the --limit parameter!
 #
 # This script applies the rendering settings using the render plugin
