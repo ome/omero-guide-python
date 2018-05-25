@@ -17,16 +17,8 @@
 #
 # ------------------------------------------------------------------------------
 
-# This script imports in-place data for 40 different users by default, 
-# user-1 through user-40 into a target dataset.
-# The script assumes that the users have the same password.
-# The data are being imported by the users themselves, 
-# i.e. after import each of the 40 users has their own batch of data.
-# Data can also be imported for trainers.
-# To import for trainers run for example
-# OMEUSER=trainer NUMBER=2 bash in_place_import.sh
-# To import a plate for trainers run for example
-# OMEUSER=trainer NUMBER=2 DATATYPE=plate FOLDER=HCS bash in_place_import.sh
+## This script is DEPRECATED use in_place_import_as.sh instead
+
 
 echo Starting
 OMEROPATH=${OMEROPATH:-/opt/omero/server/OMERO.server/bin/omero}
