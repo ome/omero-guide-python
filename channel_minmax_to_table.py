@@ -36,7 +36,7 @@ def run(username, password, plate_id, host, port):
         conn.connect()
 
         # Create a name for the Original File
-        tablename = "Channels_Min_Mex_Intensity"
+        tablename = "Channels_Min_Max_Intensity"
 
         # Go through all wells in Plate, adding row for each
         plate = conn.getObject("Plate", plate_id)
@@ -52,10 +52,9 @@ def run(username, password, plate_id, host, port):
             chCount = image.getSizeC()
             row = []
             print "well, image", well.id, image.id
-            for ch in image.getChannels():
+            for ch in image.getChannels(noRE=True):
                 row.append(long(ch.getWindowMin()))
                 row.append(long(ch.getWindowMax()))
-            image._re.close()
             rowData.append(row)
 
         print 'wellIds', wellIds
