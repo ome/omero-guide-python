@@ -24,6 +24,7 @@ import omero
 from omero.rtypes import rstring
 import omero.grid
 from omero.gateway import BlitzGateway
+from omero.sys import ParametersI
 
 
 NAMESPACE = "openmicroscopy.org/omero/bulk_annotations"
@@ -34,6 +35,7 @@ def run(username, password, plate_id, host, port):
     conn = BlitzGateway(username, password, host=host, port=port)
     try:
         conn.connect()
+        query_service = conn.getQueryService()
 
         # Create a name for the Original File
         tablename = "Channels_Min_Max_Intensity"
@@ -52,9 +54,19 @@ def run(username, password, plate_id, host, port):
             chCount = image.getSizeC()
             row = []
             print "well, image", well.id, image.id
-            for ch in image.getChannels(noRE=True):
-                row.append(long(ch.getWindowMin()))
-                row.append(long(ch.getWindowMax()))
+
+            params = omero.sys.ParametersI()
+            params.addId(image.getPixelsId())
+            query = """select pixels from Pixels as pixels
+                       left outer join fetch pixels.channels as channels
+                       join fetch channels.statsInfo where pixels.id=:id"""
+            result = query_service.findAllByQuery(query, params)
+
+            row = []
+            for pix in result:
+                for ch in pix.iterateChannels():
+                    si = ch.statsInfo
+                    row.extend([si.globalMin.val, si.globalMax.val])
             rowData.append(row)
 
         print 'wellIds', wellIds
