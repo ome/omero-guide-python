@@ -32,7 +32,7 @@ from omero.constants.namespaces import NSBULKANNOTATIONS
 
 from collections import defaultdict
 
-DEFAULT_FILE_NAME = "roi_intensities.csv"
+DEFAULT_FILE_NAME = "roi_intensities_filtered_by_channel.csv"
 BATCH_ROI_EXPORT_NS = "omero.batch_roi_export.map_ann"
 
 
