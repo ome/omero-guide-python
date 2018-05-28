@@ -57,10 +57,6 @@ def get_export_data(conn, script_params, image):
             # User input is 1-based
             ch_indexes.append(ch - 1)
 
-    # filter_ch = script_params.get("Filter_Shapes_By_Channel")
-    # if filter_ch is not None:
-        # convert to zero-based index
-        # filter_ch = filter_ch - 1
     filter_ch = 0
 
     # For idr0021 use-case, we want to pick filter_channel dynamically...
@@ -347,11 +343,6 @@ def run_script():
         scripts.List(
             "IDs", optional=False, grouping="2",
             description="List of Dataset IDs or Image IDs.").ofType(rlong(0)),
-
-        # scripts.Int(
-        #     "Filter_Shapes_By_Channel", grouping="3", optional=True,
-        #     description=("Optional: only use shapes saved to this channel"
-        #                  "(1-based index)")),
 
         scripts.List(
             "Intensity_For_Channels", grouping="4", default=[1L, 2L, 3L, 4L],
