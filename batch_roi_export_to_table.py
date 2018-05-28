@@ -48,7 +48,7 @@ def get_export_data(conn, script_params, image):
     all_planes = script_params["Export_All_Planes"]
     size_c = image.getSizeC()
     # Channels index
-    channels = script_params.get("Channels", [1])
+    channels = script_params.get("Intensity_For_Channels", [1])
     ch_indexes = []
     for ch in channels:
         if ch < 1 or ch > size_c:
@@ -353,7 +353,7 @@ def run_script():
                          "(1-based index)")),
 
         scripts.List(
-            "Channels", grouping="4", default=[1L, 2L, 3L, 4L],
+            "Intensity_For_Channels", grouping="4", default=[1L, 2L, 3L, 4L],
             description="Indices of Channels to measure intensity."
             ).ofType(rlong(0)),
 
