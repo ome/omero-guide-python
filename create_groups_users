@@ -1,0 +1,51 @@
+# Create groups
+group add Lab1 --perms 'rwra--'
+group add Lab4 --perms 'rw----'
+group add Lab2 --perms 'rwr---'
+group add Lab3 --perms 'rwrw--'
+
+# Create trainers
+user add -a trainer-1 trainer-1 trainer-1 Lab1 Lab2 Lab3 Lab4 -P ome
+user add -a trainer-2 trainer-2 trainer-2 Lab1 Lab2 Lab3 Lab4 -P ome
+
+# Create users
+user add user-1 user-1 user-1 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-2 user-2 user-2 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-3 user-3 user-3 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-4 user-4 user-4 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-5 user-5 user-5 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-6 user-6 user-6 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-7 user-7 user-7 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-8 user-8 user-8 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-9 user-9 user-9 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-10 user-10 user-10 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-11 user-11 user-11 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-12 user-12 user-12 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-13 user-13 user-13 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-14 user-14 user-14 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-15 user-15 user-15 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-16 user-16 user-16 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-17 user-17 user-17 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-18 user-18 user-18 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-19 user-19 user-19 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-20 user-20 user-20 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-21 user-21 user-21 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-22 user-22 user-22 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-23 user-23 user-23 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-24 user-24 user-24 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-25 user-25 user-25 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-26 user-26 user-26 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-27 user-27 user-27 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-28 user-28 user-28 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-29 user-29 user-29 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-30 user-30 user-30 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-31 user-31 user-31 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-32 user-32 user-32 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-33 user-33 user-33 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-34 user-34 user-34 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-35 user-35 user-35 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-36 user-36 user-36 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-37 user-37 user-37 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-38 user-38 user-38 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-39 user-39 user-39 Lab1 Lab2 Lab3 Lab4 -P ome
+user add user-40 user-40 user-40 Lab1 Lab2 Lab3 Lab4 -P ome
