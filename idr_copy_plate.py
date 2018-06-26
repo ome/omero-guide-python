@@ -20,42 +20,19 @@
 """
 This script connects to IDR and copies a Plate to another OMERO server.
 
-creating new images via getPlane() and createImageFromNumpySeq().
+It creates new images via getPlane() and createImageFromNumpySeq().
 NB: New images are only a single T and Z.
+Usage: $ python idr_copy_plate.py username password idr_plate_id
 """
 
-
+import argparse
 import omero
 from omero.gateway import BlitzGateway
 from omero.rtypes import rint, rstring
 from omero.model import PlateI
 
-USERNAME = "trainer-1"
-PASSWORD = "password"
-# The plate we want to copy
-plage_id = 422
 
-# Create connection to training server
-conn = BlitzGateway(USERNAME, PASSWORD, host="outreach.openmicroscopy.org", port=4064)
-conn.connect()
-
-# Create connection to IDR server
-# NB: conn.connect() not working on IDR. Do it like this
-idr_client = omero.client(host="idr.openmicroscopy.org", port=4064)
-idr_client.createSession('public', 'public')
-idr_conn = BlitzGateway(client_obj=idr_client)
-
-# The plate we want to copy from IDR
-idr_plate = idr_conn.getObject("Plate", plage_id)
-plate_name = idr_plate.getName()
-
-update_service = conn.getUpdateService()
-plate = PlateI()
-plate.name = rstring(plate_name)
-plate = update_service.saveAndReturnObject(plate)
-
-
-def copy_image(idr_image):
+def copy_image(conn, idr_image):
     """Create a copy of image. Single Z and T."""
     image_name = idr_image.getName()
     size_C = idr_image.getSizeC()
@@ -68,12 +45,12 @@ def copy_image(idr_image):
         for p in planes:
             yield p
     img = conn.createImageFromNumpySeq(planeGen(), image_name, sizeZ=1,
-                                       size_C=size_C, sizeT=1, channelList=clist)
+                                       sizeC=size_C, sizeT=1, channelList=clist)
     print "New image", img.id, img.name
     return img
 
 
-def add_images_to_plate(images, row, column):
+def add_images_to_plate(update_service, plate, images, row, column):
     """Add the Images to a new Well in plate."""
     well = omero.model.WellI()
     well.plate = omero.model.PlateI(plate.id, False)
@@ -89,19 +66,58 @@ def add_images_to_plate(images, row, column):
         update_service.saveObject(ws)
 
 
-for idr_well in idr_plate.listChildren():
-    print "Well", idr_well.id, 'row', idr_well.row, 'col', idr_well.column
-    # For each Well, get image and clone locally...
-    new_imgs = []
-    for idr_wellsample in idr_well.listChildren():
-        idr_image = idr_wellsample.getImage()
+def run(username, password, plate_id, host, port):
+    """Run the script."""
+    # Create connection to training server
+    conn = BlitzGateway(username, password, host=host, port=port)
+    conn.connect()
 
-        print "Image", idr_image.id
-        image = copy_image(idr_image)
-        new_imgs.append(image)
-    # link to Plate...
-    add_images_to_plate(new_imgs, idr_well.row, idr_well.column)
+    # Create connection to IDR server
+    # NB: conn.connect() not working on IDR. Do it like this
+    idr_client = omero.client(host="idr.openmicroscopy.org", port=4064)
+    idr_client.createSession('public', 'public')
+    idr_conn = BlitzGateway(client_obj=idr_client)
+
+    # The plate we want to copy from IDR
+    idr_plate = idr_conn.getObject("Plate", plate_id)
+    plate_name = idr_plate.getName()
+
+    update_service = conn.getUpdateService()
+    plate = PlateI()
+    plate.name = rstring(plate_name)
+    plate = update_service.saveAndReturnObject(plate)
+
+    for idr_well in idr_plate.listChildren():
+        print "Well", idr_well.id, 'row', idr_well.row, 'col', idr_well.column
+        # For each Well, get image and clone locally...
+        new_imgs = []
+        for idr_wellsample in idr_well.listChildren():
+            idr_image = idr_wellsample.getImage()
+
+            print "Image", idr_image.id
+            image = copy_image(conn, idr_image)
+            new_imgs.append(image)
+        # link to Plate...
+        add_images_to_plate(update_service, plate, new_imgs,
+                            idr_well.row, idr_well.column)
+
+    conn.close()
+    idr_conn.close()
 
 
-conn.close()
-idr_conn.close()
+def main(args):
+    """Entry point. Parse args and run."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument('username')
+    parser.add_argument('password')
+    parser.add_argument('plate_id')
+    parser.add_argument('--server', default="outreach.openmicroscopy.org",
+                        help="OMERO server hostname")
+    parser.add_argument('--port', default=4064, help="OMERO server port")
+    args = parser.parse_args(args)
+    run(args.username, args.password, args.plate_id, args.server, args.port)
+
+
+if __name__ == '__main__':
+    import sys
+    main(sys.argv[1:])
