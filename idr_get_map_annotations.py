@@ -99,6 +99,7 @@ def run(username, password, idr_id, local_id, host, port):
 
 
 def main(args):
+    # Usage: $ python idr_get_map_annotation.py username password idr_id local_id
     parser = argparse.ArgumentParser()
     parser.add_argument('username')
     parser.add_argument('password')
