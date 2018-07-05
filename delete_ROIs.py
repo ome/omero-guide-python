@@ -36,7 +36,7 @@ def run(username, password, dataset_id, host, port):
             if result is not None:
                 roi_ids = [roi.id.val for roi in result.rois]
                 print "Deleting %s ROIs..." % len(roi_ids)
-                conn.deleteObjects("Roi", roi_ids)
+                conn.deleteObjects("Roi", roi_ids, wait=True)
     except Exception as exc:
             print "Error while deleting annotations: %s" % str(exc)
     finally:
