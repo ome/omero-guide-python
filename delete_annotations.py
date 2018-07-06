@@ -21,6 +21,7 @@
 
 import argparse
 from omero.gateway import BlitzGateway
+import omero
 
 
 def run(username, password, dataset_id, ns, host, port):
@@ -29,12 +30,15 @@ def run(username, password, dataset_id, ns, host, port):
     try:
         conn.connect()
         dataset = conn.getObject("Dataset", dataset_id)
-
+        ann_ids =[]
         for image in dataset.listChildren():
-            ann_ids = [a.id for a in image.listAnnotations(ns)]
-            if len(ann_ids) > 0:
-                print "Deleting %s annotations..." % len(ann_ids)
-                conn.deleteObjects('Annotation', ann_ids, wait=True)
+            for a in image.listAnnotations():
+                print a.getId(), a.OMERO_TYPE
+                if a.OMERO_TYPE == omero.model.FileAnnotationI:
+                    ann_ids.append(a.id)
+        if len(ann_ids) > 0:
+            print "Deleting %s annotations..." % len(ann_ids)
+            conn.deleteObjects('Annotation', ann_ids, wait=True)
     except Exception as exc:
             print "Error while deleting annotations: %s" % str(exc)
     finally:
