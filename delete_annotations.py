@@ -21,10 +21,12 @@
 # The namespace can be also "none"
 # Examples
 # delete_annotations.py --anntype file --namespace none username pwd dataset_id
-# will delete all FileAnnotations on a given dataset regardless of namespace
+# will delete all FileAnnotations on images of
+# a given dataset regardless of namespace
 #
 # delete_annotations.py username pwd dataset_id
-# will delete all MapAnnotations with namespace omero.batch_roi_export.map_ann
+# will delete all MapAnnotations with
+# namespace omero.batch_roi_export.map_ann
 
 import argparse
 from omero.gateway import BlitzGateway
