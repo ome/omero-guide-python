@@ -87,7 +87,7 @@ def run(username, password, host, port):
             admin_service.updateExperimenter(exp)
 
     except Exception as exc:
-            print "Error while renameing users: %s" % str(exc)
+            print "Error while renaming users: %s" % str(exc)
     finally:
         conn.close()
 
