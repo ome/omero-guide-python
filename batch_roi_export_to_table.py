@@ -27,7 +27,7 @@ from omero.gateway import BlitzGateway, MapAnnotationWrapper,\
     FileAnnotationWrapper
 from omero.rtypes import unwrap, rstring, rlong, robject
 from omero.grid import DoubleColumn, ImageColumn
-from omero.model import FileAnnotationI, OriginalFileI
+from omero.model import OriginalFileI
 from omero.constants.namespaces import NSBULKANNOTATIONS
 
 from collections import defaultdict
@@ -156,6 +156,7 @@ SUMMARY_COL_NAMES = ["filter_shapes_by_channel",
 
 
 def link_table(conn, table, project):
+    """Create FileAnnotation for OMERO.table and links to Project."""
     orig_file = table.getOriginalFile()
     file_ann = FileAnnotationWrapper(conn)
     file_ann.setNs(NSBULKANNOTATIONS)
@@ -164,17 +165,16 @@ def link_table(conn, table, project):
     project.linkAnnotation(file_ann)
 
 
-def write_csv(conn, export_data, script_params):
+def write_csv(conn, export_data, file_name, col_names):
     """Write the list of data to a CSV file and create a file annotation."""
-    file_name = script_params.get("File_Name", "")
     if len(file_name) == 0:
         file_name = DEFAULT_FILE_NAME
     if not file_name.endswith(".csv"):
         file_name += ".csv"
 
-    csv_rows = [",".join(COLUMN_NAMES)]
+    csv_rows = [",".join(col_names)]
     for row in export_data:
-        cells = [str(row.get(name)) for name in COLUMN_NAMES]
+        cells = [str(row.get(name)) for name in col_names]
         csv_rows.append(",".join(cells))
 
     with open(file_name, 'w') as csv_file:
@@ -218,52 +218,49 @@ def get_summary_data_for_image(conn, image, export_data, script_params):
     }
 
 
-def save_table(conn, images, export_data, script_params):
-    """Summarise ROIs as Table (1 row per Image) linked to Project."""
-
-    resources = conn.c.sf.sharedResources()
-    repository_id = resources.repositories().descriptions[0].getId().getValue()
-    table_name = "batch_roi_export"
-    table = resources.newTable(repository_id, table_name)
-
-    # Summarise data into columns
-    image_ids = [i.id for i in images]
-    col_data = defaultdict(list)
+def group_data_by_image(conn, images, export_data, script_params):
+    """Group ROI data by Images."""
+    # Create a dict of empty lists
+    image_data = defaultdict(list)
 
     for image in images:
         data = get_summary_data_for_image(conn, image, export_data,
                                           script_params)
         for key in SUMMARY_COL_NAMES:
-            col_data[key].append(data[key] if data is not None else 0)
+            image_data[key].append(data[key] if data is not None else 0)
+
+    return image_data
+
+
+def save_table(conn, images, image_data, script_params, project=None):
+    """Summarise ROIs as Table (1 row per Image) linked to Project."""
+    resources = conn.c.sf.sharedResources()
+    repository_id = resources.repositories().descriptions[0].getId().getValue()
+    table_name = "batch_roi_export"
+    table = resources.newTable(repository_id, table_name)
 
     # Create table
+    image_ids = [i.id for i in images]
     img_column = ImageColumn('Image', '', image_ids)
-    cols = [DoubleColumn(k, '', col_data[k]) for k in SUMMARY_COL_NAMES]
+    cols = [DoubleColumn(k, '', image_data[k]) for k in SUMMARY_COL_NAMES]
     data = [img_column] + cols
     table.initialize(data)
     table.addData(data)
     table.close()
 
-    # Link Table to first Project we find
-    project = None
-    for image in images:
-        project = image.getProject()
-        if project is not None:
-            break
     if project is None:
         log("No Project found to link table")
     else:
         link_table(conn, table, project)
 
 
-def save_map_annotations(conn, images, export_data, script_params):
+def save_map_annotations(conn, images, image_data, script_params):
     """Summarise ROIs as Key-Value pairs for each Image."""
-    for image in images:
-        data = get_summary_data_for_image(conn, image, export_data,
-                                          script_params)
-        if data is None:
-            continue
-        key_value_data = [[k, str(data[k])] for k in SUMMARY_COL_NAMES]
+    for i, image in enumerate(images):
+        key_value_data = []
+        for col_name in SUMMARY_COL_NAMES:
+            col_data = image_data.get(col_name)
+            key_value_data.append([col_name, str(col_data[i])])
         map_ann = MapAnnotationWrapper(conn)
         # Use custom namespace to allow finding/deleting map_anns we create
         map_ann.setNs(BATCH_ROI_EXPORT_NS)
@@ -308,20 +305,48 @@ def batch_roi_export(conn, script_params):
     # Write to csv
     file_ann = None
     if script_params.get("Export_CSV"):
-        file_ann = write_csv(conn, export_data, script_params)
-        if script_params['Data_Type'] == "Dataset":
+        file_name = script_params.get("File_Name", "")
+        file_ann = write_csv(conn, export_data, file_name, COLUMN_NAMES)
+        if script_params['Data_Type'] == "Project":
+            projects = conn.getObjects("Project", script_params['IDs'])
+            link_annotation(projects, file_ann)
+        elif script_params['Data_Type'] == "Dataset":
             datasets = conn.getObjects("Dataset", script_params['IDs'])
             link_annotation(datasets, file_ann)
         else:
             link_annotation(images, file_ann)
 
+    # Group ROI data by Image (ordered same as images)
+    image_data = group_data_by_image(conn, images, export_data, script_params)
+
     # Create Map_Annotations on each image
     if script_params.get("Save_As_Key-Value"):
-        save_map_annotations(conn, images, export_data, script_params)
+        save_map_annotations(conn, images, image_data, script_params)
+
+    # Link Table and CSV to first Project we find
+    project = None
+    for image in images:
+        project = image.getProject()
+        if project is not None:
+            break
 
     # Create single OMERO.table
     if script_params.get("Create_Table"):
-        save_table(conn, images, export_data, script_params)
+        save_table(conn, images, image_data, script_params, project)
+
+        image_csv_cols = ["image_id", "name", "dataset"] + SUMMARY_COL_NAMES
+        # Save image_data as CSV on Project
+        csv_data = []
+        # convert image_data from dict of lists to a list of dicts!
+        for i, image in enumerate(images):
+            row = {"image_id": str(image.getId()),
+                   "name": image.getName(),
+                   "dataset": image.getParent().getName()}
+            for k in SUMMARY_COL_NAMES:
+                row[k] = image_data.get(k)[i]
+            csv_data.append(row)
+        csv_ann = write_csv(conn, csv_data, "batch_roi_export.csv", image_csv_cols)
+        project.linkAnnotation(csv_ann)
 
     message = "Exported %s shapes" % len(export_data)
     return file_ann, message
