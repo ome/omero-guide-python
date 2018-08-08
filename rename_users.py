@@ -73,10 +73,9 @@ def run(username, password, host, port):
               "Rosalyn Yalow"]
 
     conn = BlitzGateway(username, password, host=host, port=port)
-    conn.connect()
-    admin_service = conn.getAdminService()
     try:
         conn.connect()
+        admin_service = conn.getAdminService()
         for i, full_name in enumerate(full_names):
             username = 'user-%s' % (i + 1)
             print username, full_name
