@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# -----------------------------------------------------------------------------
-#   Copyright (C) 2017 University of Dundee. All rights reserved.
+# ------------------------------------------------------------------------------
+#   Copyright (C) 2017-2018 University of Dundee. All rights reserved.
 
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -20,22 +20,137 @@
 # ------------------------------------------------------------------------------
 
 """
-Simple FRAP plots from Rectangles on images.
+Simple FRAP plots from Rectangles on images and creates an OMERO.figure.
+
 This an OMERO script that runs server-side.
 """
 
 import omero
+import json
+from cStringIO import StringIO
 
 import omero.scripts as scripts
-from omero.rtypes import rlong
+from omero.rtypes import rlong, rstring
 from omero.gateway import BlitzGateway
-from omero.rtypes import robject, rstring
+from omeroweb.webgateway.marshal import imageMarshal
 
+from PIL import Image
 import numpy as np
 try:
     import matplotlib.pyplot as plt
 except (ImportError, RuntimeError):
     plt = None
+
+JSON_FILEANN_NS = "omero.web.figure.json"
+
+def create_figure_file(conn, figure_json):
+    """Create Figure FileAnnotation from json data."""
+    figure_name = figure_json['figureName']
+    if len(figure_json['panels']) == 0:
+        raise Exception('No Panels')
+    first_img_id = figure_json['panels'][0]['imageId']
+
+    # we store json in description field...
+    description = {}
+    description['name'] = figure_name
+    description['imageId'] = first_img_id
+
+    # Try to set Group context to the same as first image
+    conn.SERVICE_OPTS.setOmeroGroup('-1')
+    i = conn.getObject("Image", first_img_id)
+    gid = i.getDetails().getGroup().getId()
+    conn.SERVICE_OPTS.setOmeroGroup(gid)
+
+    json_string = json.dumps(figure_json)
+    file_size = len(json_string)
+    f = StringIO()
+    json.dump(figure_json, f)
+
+    update = conn.getUpdateService()
+    orig_file = conn.createOriginalFileFromFileObj(
+        f, '', figure_name, file_size, mimetype="application/json")
+    fa = omero.model.FileAnnotationI()
+    fa.setFile(omero.model.OriginalFileI(orig_file.getId(), False))
+    fa.setNs(rstring(JSON_FILEANN_NS))
+    desc = json.dumps(description)
+    fa.setDescription(rstring(desc))
+    fa = update.saveAndReturnObject(fa, conn.SERVICE_OPTS)
+    return fa.getId().getValue()
+
+
+def get_panel_json(image, x, y, width, height, theT):
+    """Get json for a figure panel."""
+    px = image.getPrimaryPixels().getPhysicalSizeX()
+    py = image.getPrimaryPixels().getPhysicalSizeY()
+
+    rv = imageMarshal(image)
+
+    img_json = {
+        "labels":[],
+        "height": height,
+        "channels": rv['channels'],
+        "width": width,
+        "sizeT": rv['size']['t'],
+        "sizeZ": rv['size']['z'],
+        "dx": 0,
+        "dy": 0,
+        "rotation": 0,
+        "imageId": image.id,
+        "name": image.getName(),
+        "orig_width": rv['size']['width'],
+        "zoom": 100,
+        "shapes": [],
+        "orig_height": rv['size']['height'],
+        "y": y,
+        "x": x,
+        "theT": theT,
+        "theZ": rv['rdefs']['defaultZ']
+    }
+    if px is not None:
+        img_json["pixel_size_x"] = px.getValue()
+        img_json["pixel_size_x_unit"] = str(px.getUnit())
+        img_json["pixel_size_x_symbol"] = px.getSymbol()
+    if py is not None:
+        img_json["pixel_size_y"] = py.getValue()
+    return img_json
+
+def create_omero_figure(conn, images, plots):
+    """Create OMERO.figure from given FRAP images and plot images."""
+    figure_json = {"version":2,
+                   "paper_width":595,
+                   "paper_height":842,
+                   "page_size":"A4",
+                   "figureName":"FRAP figure from script",
+                  }
+    time_frames = [0, 1, 2, 3, 5]
+
+    panel_width = 80
+    panel_height = panel_width
+    spacing = panel_width/20
+    margin = 40
+
+    panels_json = []
+
+    for i, image in enumerate(images):
+
+        panel_x = margin
+        panel_y = (i * (panel_height + spacing)) + margin
+        for col in range(len(time_frames)):
+            the_t = time_frames[col]
+            panel_x = (col * (panel_height + spacing)) + margin
+            j = get_panel_json(image, panel_x, panel_y, panel_width, panel_height, the_t)
+            # j['labels'] = get_labels_json(j, c, z)
+            panels_json.append(j)
+        # Add plot
+        if i < len(plots):
+            plot = plots[i]
+            panel_x = (len(time_frames) * (panel_height + spacing)) + margin
+            plot_width = panel_height * (float(plot.getSizeX()) / plot.getSizeY())
+            j = get_panel_json(plot, panel_x, panel_y, plot_width, panel_height, 0)
+            panels_json.append(j)
+
+    figure_json['panels'] = panels_json
+    return create_figure_file(conn, figure_json)
 
 
 def run(conn, params):
@@ -110,29 +225,25 @@ def run(conn, params):
             plt.subplot(111)
             plt.plot(meanvalues)
             fig.canvas.draw()
-            data = np.fromstring(fig.canvas.tostring_rgb(),
-                                 dtype=np.uint8, sep='')
-            data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-
-            red = data[::, ::, 0]
-            green = data[::, ::, 1]
-            blue = data[::, ::, 2]
+            fig.savefig('plot.png')
+            pil_img = Image.open('plot.png')
+            np_array = np.asarray(pil_img)
+            red = np_array[::, ::, 0]
+            green = np_array[::, ::, 1]
+            blue = np_array[::, ::, 2]
             plane_gen = iter([red, green, blue])
             plot_name = image.getName() + "_FRAP_plot"
             i = conn.createImageFromNumpySeq(plane_gen, plot_name, sizeC=3,
                                              dataset=image.getParent())
             frap_plots.append(i)
-        else:
-            # If not plot, simply return input image
-            frap_plots.append(image)
 
-    return frap_plots
+    return create_omero_figure(conn, images, frap_plots)
 
 
 if __name__ == "__main__":
     dataTypes = [rstring('Dataset'), rstring('Image')]
     client = scripts.client(
-        'Scipy_Gaussian_Filter.py',
+        'Simple_FRAP.py',
         """
     This script does simple FRAP analysis using Rectangle ROIs previously
     saved on images. If matplotlib is installed, data is plotted and new
@@ -162,14 +273,12 @@ if __name__ == "__main__":
 
         # wrap client to use the Blitz Gateway
         conn = BlitzGateway(client_obj=client)
-        # # Call the main script - returns the number of images processed
-        images = run(conn, scriptParams)
-        if images is None:
+        # Call the main script - returns the new OMERO.figure ann ID
+        figure_id = run(conn, scriptParams)
+        if figure_id is None:
             message = "No images found"
         else:
-            message = "Processed %s images" % len(images)
-            # return first image:
-            client.setOutput("Image", robject(images[0]._obj))
+            message = "Created FRAP figure: %s" % figure_id
 
         client.setOutput("Message", rstring(message))
 
