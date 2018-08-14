@@ -30,8 +30,9 @@ import json
 from cStringIO import StringIO
 
 import omero.scripts as scripts
-from omero.rtypes import rlong, rstring, unwrap
+from omero.rtypes import rlong, rstring
 from omero.gateway import BlitzGateway
+from omeroweb.webgateway.marshal import imageMarshal
 
 from PIL import Image
 import numpy as np
@@ -41,36 +42,6 @@ except (ImportError, RuntimeError):
     plt = None
 
 JSON_FILEANN_NS = "omero.web.figure.json"
-
-
-def channelMarshal(channel):
-    """
-    Return a dict with all there is to know about a channel.
-
-    NB: This is copied from omeroweb.webgateway.marshal.py since we don't know
-    that OMERO.web is installed on same environment as scripts
-
-    @param channel:     L{omero.gateway.ChannelWrapper}
-    @return:            Dict
-    """
-    chan = {'emissionWave': channel.getEmissionWave(),
-            'label': channel.getLabel(),
-            'color': channel.getColor().getHtml(),
-            # 'reverseIntensity' is deprecated. Use 'inverted'
-            'inverted': channel.isInverted(),
-            'reverseIntensity': channel.isInverted(),
-            'family': unwrap(channel.getFamily()),
-            'coefficient': unwrap(channel.getCoefficient()),
-            'window': {'min': channel.getWindowMin(),
-                       'max': channel.getWindowMax(),
-                       'start': channel.getWindowStart(),
-                       'end': channel.getWindowEnd()},
-            'active': channel.isActive()}
-    lut = channel.getLut()
-    if lut and len(lut) > 0:
-        chan['lut'] = lut
-    return chan
-
 
 def create_figure_file(conn, figure_json):
     """Create Figure FileAnnotation from json data."""
@@ -112,28 +83,28 @@ def get_panel_json(image, x, y, width, height, theT):
     px = image.getPrimaryPixels().getPhysicalSizeX()
     py = image.getPrimaryPixels().getPhysicalSizeY()
 
-    channels = map(lambda x: channelMarshal(x), image.getChannels())
+    rv = imageMarshal(image)
 
     img_json = {
         "labels":[],
         "height": height,
-        "channels": channels,
+        "channels": rv['channels'],
         "width": width,
-        "sizeT": image.getSizeT(),
-        "sizeZ": image.getSizeZ(),
+        "sizeT": rv['size']['t'],
+        "sizeZ": rv['size']['z'],
         "dx": 0,
         "dy": 0,
         "rotation": 0,
         "imageId": image.id,
         "name": image.getName(),
-        "orig_width": image.getSizeX(),
+        "orig_width": rv['size']['width'],
         "zoom": 100,
         "shapes": [],
-        "orig_height": image.getSizeY(),
+        "orig_height": rv['size']['height'],
         "y": y,
         "x": x,
         "theT": theT,
-        "theZ": 0
+        "theZ": rv['rdefs']['defaultZ']
     }
     if px is not None:
         img_json["pixel_size_x"] = px.getValue()
