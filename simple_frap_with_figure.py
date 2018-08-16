@@ -128,6 +128,16 @@ def create_figure_file(conn, figure_json):
     return fa.getId().getValue()
 
 
+def get_scalebar_json():
+    """Return JSON to add a 10 micron scalebar to bottom-right."""
+    return {"show": True,
+            "length": 10,
+            "position": "bottomright",
+            "color": "FFFFFF",
+            "show_label": True,
+            "font_size": "10"}
+
+
 def get_panel_json(image, x, y, width, height, theT):
     """Get json for a figure panel."""
     px = image.getPrimaryPixels().getPhysicalSizeX()
@@ -136,7 +146,7 @@ def get_panel_json(image, x, y, width, height, theT):
     channels = map(lambda x: channelMarshal(x), image.getChannels())
 
     img_json = {
-        "labels":[],
+        "labels": [],
         "height": height,
         "channels": channels,
         "width": width,
@@ -166,15 +176,16 @@ def get_panel_json(image, x, y, width, height, theT):
         img_json['deltaT'] = get_timestamps(conn, image)
     return img_json
 
+
 def create_omero_figure(conn, images, plots):
     """Create OMERO.figure from given FRAP images and plot images."""
-    figure_json = {"version":2,
-                   "paper_width":595,
-                   "paper_height":842,
-                   "page_size":"A4",
-                   "figureName":"FRAP figure from script",
-                  }
-    time_frames = [0, 1, 2, 3, 5]
+    figure_json = {"version": 2,
+                   "paper_width": 595,
+                   "paper_height": 842,
+                   "page_size": "A4",
+                   "figureName": "FRAP figure from script",
+                   }
+    time_frames = [2, 3, 4, 5, 10]
 
     panel_width = 80
     panel_height = panel_width
@@ -190,15 +201,24 @@ def create_omero_figure(conn, images, plots):
         for col in range(len(time_frames)):
             the_t = time_frames[col]
             panel_x = (col * (panel_height + spacing)) + margin
-            j = get_panel_json(image, panel_x, panel_y, panel_width, panel_height, the_t)
-            # j['labels'] = get_labels_json(j, c, z)
+            j = get_panel_json(image, panel_x, panel_y,
+                               panel_width, panel_height, the_t)
+            # Add timestamp in 'secs' to top-left of each movie frame
+            j['labels'] = [{"time": "secs",
+                            "size": "12",
+                            "position": "topleft",
+                            "color": "FFFFFF"}]
             panels_json.append(j)
+        # Add scalebar to last panel
+        panels_json[-1]['scalebar'] = get_scalebar_json()
         # Add plot
         if i < len(plots):
             plot = plots[i]
             panel_x = (len(time_frames) * (panel_height + spacing)) + margin
-            plot_width = panel_height * (float(plot.getSizeX()) / plot.getSizeY())
-            j = get_panel_json(plot, panel_x, panel_y, plot_width, panel_height, 0)
+            plot_width = (panel_height *
+                          (float(plot.getSizeX()) / plot.getSizeY()))
+            j = get_panel_json(plot, panel_x, panel_y,
+                               plot_width, panel_height, 0)
             panels_json.append(j)
 
     figure_json['panels'] = panels_json
