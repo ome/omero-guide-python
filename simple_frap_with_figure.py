@@ -72,6 +72,27 @@ def channelMarshal(channel):
     return chan
 
 
+def get_timestamps(conn, image):
+    """Return a list of times (secs) 1 for each T-index in image."""
+    params = omero.sys.ParametersI()
+    params.addLong('pid', image.getPixelsId())
+    query = "from PlaneInfo as Info where"\
+        " Info.theZ=0 and Info.theC=0 and pixels.id=:pid"
+    info_list = conn.getQueryService().findAllByQuery(
+        query, params, conn.SERVICE_OPTS)
+    timemap = {}
+    for info in info_list:
+        t_index = info.theT.getValue()
+        if info.deltaT is not None:
+            delta_t = info.deltaT.getValue()
+            timemap[t_index] = round(delta_t, 2)
+    time_list = []
+    for t in range(image.getSizeT()):
+        if t in timemap:
+            time_list.append(timemap[t])
+    return time_list
+
+
 def create_figure_file(conn, figure_json):
     """Create Figure FileAnnotation from json data."""
     figure_name = figure_json['figureName']
@@ -141,6 +162,8 @@ def get_panel_json(image, x, y, width, height, theT):
         img_json["pixel_size_x_symbol"] = px.getSymbol()
     if py is not None:
         img_json["pixel_size_y"] = py.getValue()
+    if image.getSizeT() > 1:
+        img_json['deltaT'] = get_timestamps(conn, image)
     return img_json
 
 def create_omero_figure(conn, images, plots):
