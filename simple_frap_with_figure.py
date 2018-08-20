@@ -20,7 +20,7 @@
 # ------------------------------------------------------------------------------
 
 """
-Simple FRAP plots from Rectangles on images and creates an OMERO.figure.
+Simple FRAP plots from Ellipses on images and creates an OMERO.figure.
 
 This an OMERO script that runs server-side.
 """
@@ -227,7 +227,7 @@ def create_omero_figure(conn, images, plots):
 
 def run(conn, params):
     """
-    For each image, getTiles() for FRAP rectangle and plot mean intensity.
+    For each image, getTiles() for FRAP Ellipse and plot mean intensity.
 
     Returns list of images
     @param conn   The BlitzGateway connection
@@ -253,32 +253,28 @@ def run(conn, params):
     for image in images:
         print "---- Processing image", image.id
         result = roi_service.findByImage(image.getId(), None)
-        x = 0
-        y = 0
-        width = 0
-        height = 0
+
+        # Simply use any Ellipse we find...
+        shape_id = None
         for roi in result.rois:
             print "ROI:  ID:", roi.getId().getValue()
             for s in roi.copyShapes():
-                if type(s) == omero.model.RectangleI:
-                    x = s.getX().getValue()
-                    y = s.getY().getValue()
-                    width = s.getWidth().getValue()
-                    height = s.getHeight().getValue()
-        print "Rectangle:", x, y, width, height
-        if x == 0:
-            print "  No Rectangle found for this image"
+                if type(s) == omero.model.EllipseI:
+                    shape_id = s.id.val
+        print "Shape:", shape_id
+        if shape_id is None:
+            print "  No Ellipse found for this image"
             continue
 
-        c, z = 0, 0
-        tile = (int(x), int(y), int(width), int(height))
-        pixels = image.getPrimaryPixels()
+        # Get pixel intensities for first Channel
+        the_c = 0
+        the_z = 0
         size_t = image.getSizeT()
-        zct_list = [(z, c, t, tile) for t in range(size_t)]
-        planes = pixels.getTiles(zct_list)
         meanvalues = []
-        for i, p in enumerate(planes):
-            meanvalues.append(p.mean())
+        for t in range(size_t):
+            stats = roi_service.getShapeStatsRestricted([shape_id],
+                                                        the_z, t, [the_c])
+            meanvalues.append(stats[0].mean[the_c])
 
         print meanvalues
 
@@ -317,7 +313,7 @@ if __name__ == "__main__":
     client = scripts.client(
         'Simple_FRAP.py',
         """
-    This script does simple FRAP analysis using Rectangle ROIs previously
+    This script does simple FRAP analysis using Ellipse ROIs previously
     saved on images. If matplotlib is installed, data is plotted and new
     OMERO images are created from the plots.
         """,
