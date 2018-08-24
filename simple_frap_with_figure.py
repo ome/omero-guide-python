@@ -36,7 +36,10 @@ from omero.gateway import BlitzGateway
 from PIL import Image
 import numpy as np
 try:
-    import matplotlib.pyplot as plt
+    import matplotlib
+    # Run headless, so that pyplot doesn't try to import gtk
+    matplotlib.use('Agg')
+    from matplotlib import pyplot as plt
 except (ImportError, RuntimeError):
     plt = None
 
