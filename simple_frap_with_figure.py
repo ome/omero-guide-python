@@ -314,7 +314,7 @@ def run(conn, params):
 if __name__ == "__main__":
     dataTypes = [rstring('Dataset'), rstring('Image')]
     client = scripts.client(
-        'Simple_FRAP.py',
+        'Simple_FRAP_with_figure.py',
         """
     This script does simple FRAP analysis using Ellipse ROIs previously
     saved on images. If matplotlib is installed, data is plotted and new
