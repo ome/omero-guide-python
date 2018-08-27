@@ -127,7 +127,7 @@ def run(conn, params):
 if __name__ == "__main__":
     dataTypes = [rstring('Dataset'), rstring('Image')]
     client = scripts.client(
-        'Scipy_Gaussian_Filter.py',
+        'Simple FRAP.py',
         """
     This script does simple FRAP analysis using Ellipse ROIs previously
     saved on images. If matplotlib is installed, data is plotted and new
