@@ -41,6 +41,7 @@ def run(username, password, dataset_id, anntype, ns, host, port):
         conn.connect()
         dataset = conn.getObject("Dataset", dataset_id)
         ann_ids =[]
+        given_type = None
         if anntype == "map":
             given_type = omero.model.MapAnnotationI
         if anntype == "file":
