@@ -31,6 +31,8 @@ from omero.rtypes import rlong
 from omero.gateway import BlitzGateway
 from omero.rtypes import robject, rstring
 
+from PIL import Image
+
 import numpy as np
 try:
     import matplotlib.pyplot as plt
