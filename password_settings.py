@@ -21,6 +21,7 @@
 
 """
 This script changes the password for users user-1 through user-40.
+It also changes the password of trainer-1 and trainer-2
 The change must be done by an admin e.g. trainer-1.
 """
 
@@ -40,12 +41,18 @@ def run(password, new_password, admin_name, host, port):
         user = 'user-%s' % i
         print user
         admin.changeUserPassword(user, rstring(new_password))
+    
+    for i in range(1, 3):
+        user = 'trainer-%s' % i
+        print user
+        admin.changeUserPassword(user, rstring(new_password))
 
     client.closeSession()
 
 
 def main(args):
     parser = argparse.ArgumentParser()
+    # The password of the user changing the passwords
     parser.add_argument('password')
     parser.add_argument('newpassword')
     parser.add_argument('--name', default="trainer-1",
