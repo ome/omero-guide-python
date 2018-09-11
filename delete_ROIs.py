@@ -29,7 +29,8 @@ def run(name, password, dataset_name, host, port):
     try:
         conn.connect()
         roi_service = conn.getRoiService()
-        datasets = conn.getObjects("Dataset", attributes={"name":dataset_name})
+        datasets = conn.getObjects("Dataset",
+                                   attributes={"name": dataset_name})
         for dataset in datasets:
             print dataset.getId()
             for image in dataset.listChildren():
@@ -50,14 +51,14 @@ def run(name, password, dataset_name, host, port):
 def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('password')
-    parser.add_argument('dataset_name')
+    parser.add_argument('datasetname')
     parser.add_argument('--name', default="trainer-1",
                         help="The user deleting the rois")
     parser.add_argument('--server', default="outreach.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.name, args.password, args.dataset_name, args.server, args.port)
+    run(args.name, args.password, args.datasetname, args.server, args.port)
 
 
 if __name__ == '__main__':
