@@ -23,36 +23,41 @@ import argparse
 from omero.gateway import BlitzGateway
 
 
-def run(username, password, dataset_id, host, port):
+def run(name, password, dataset_name, host, port):
 
-    conn = BlitzGateway(username, password, host=host, port=port)
+    conn = BlitzGateway(name, password, host=host, port=port)
     try:
         conn.connect()
-        dataset = conn.getObject("Dataset", dataset_id)
         roi_service = conn.getRoiService()
-        for image in dataset.listChildren():
-            result = roi_service.findByImage(image.getId(), None,
-                                             conn.SERVICE_OPTS)
-            if result is not None:
-                roi_ids = [roi.id.val for roi in result.rois]
-                print "Deleting %s ROIs..." % len(roi_ids)
-                conn.deleteObjects("Roi", roi_ids, wait=True)
+        datasets = conn.getObjects("Dataset", attributes={"name":dataset_name})
+        for dataset in datasets:
+            print dataset.getId()
+            for image in dataset.listChildren():
+                result = roi_service.findByImage(image.getId(), None,
+                                                 conn.SERVICE_OPTS)
+                if result is not None:
+                    roi_ids = [roi.id.val for roi in result.rois]
+                    print "Deleting %s ROIs..." % len(roi_ids)
+                    if len(roi_ids) > 0:
+                        conn.deleteObjects("Roi", roi_ids, wait=True)
     except Exception as exc:
-            print "Error while deleting annotations: %s" % str(exc)
+            print(exc)
+            print "Error while deleting Rois: %s" % str(exc)
     finally:
         conn.close()
 
 
 def main(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument('username')
     parser.add_argument('password')
-    parser.add_argument('dataset_id')
+    parser.add_argument('dataset_name')
+    parser.add_argument('--name', default="trainer-1",
+                        help="The user deleting the rois")
     parser.add_argument('--server', default="outreach.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.username, args.password, args.dataset_id, args.server, args.port)
+    run(args.name, args.password, args.dataset_name, args.server, args.port)
 
 
 if __name__ == '__main__':
