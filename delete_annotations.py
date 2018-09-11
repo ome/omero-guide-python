@@ -20,11 +20,11 @@
 # Delete Annotations of a particular namespace from all Images in a Dataset
 # The namespace can be also "none"
 # Examples
-# delete_annotations.py --anntype file --namespace none username pwd dataset_id
+# delete_annotations.py --anntype file --namespace none pwd datasetname
 # will delete all FileAnnotations on images of
 # a given dataset regardless of namespace
 #
-# delete_annotations.py username pwd dataset_id
+# delete_annotations.py pwd datasetname
 # will delete all MapAnnotations with
 # namespace omero.batch_roi_export.map_ann
 
@@ -34,28 +34,36 @@ from omero.rtypes import rstring
 import omero
 
 
-def run(username, password, dataset_id, anntype, ns, host, port):
+def run(name, password, dataset_name, anntype, ns, host, port):
 
-    conn = BlitzGateway(username, password, host=host, port=port)
+    conn = BlitzGateway(name, password, host=host, port=port)
     try:
         conn.connect()
-        dataset = conn.getObject("Dataset", dataset_id)
-        ann_ids =[]
-        given_type = None
-        if anntype == "map":
-            given_type = omero.model.MapAnnotationI
-        if anntype == "file":
-            given_type = omero.model.FileAnnotationI
-        if ns == "none":
-            ns = None
-        for image in dataset.listChildren():
-            for a in image.listAnnotations(ns):
+        datasets = conn.getObjects("Dataset",
+                                   attributes={"name": dataset_name})
+        for dataset in datasets:
+            print dataset.getId()
+            ann_ids = []
+            given_type = None
+            if anntype == "map":
+                given_type = omero.model.MapAnnotationI
+            if anntype == "file":
+                given_type = omero.model.FileAnnotationI
+            if ns == "none":
+                ns = None
+            for image in dataset.listChildren():
+                for a in image.listAnnotations(ns):
+                    if a.OMERO_TYPE == given_type:
+                        print a.getId(), a.OMERO_TYPE, a.ns
+                        ann_ids.append(a.id)
+            # Delete the annotations link to the dataset
+            for a in dataset.listAnnotations(ns):
                 if a.OMERO_TYPE == given_type:
                     print a.getId(), a.OMERO_TYPE, a.ns
                     ann_ids.append(a.id)
-        if len(ann_ids) > 0:
-            print "Deleting %s annotations..." % len(ann_ids)
-            conn.deleteObjects('Annotation', ann_ids, wait=True)
+            if len(ann_ids) > 0:
+                print "Deleting %s annotations..." % len(ann_ids)
+                conn.deleteObjects('Annotation', ann_ids, wait=True)
     except Exception as exc:
             print "Error while deleting annotations: %s" % str(exc)
     finally:
@@ -64,19 +72,21 @@ def run(username, password, dataset_id, anntype, ns, host, port):
 
 def main(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument('username')
     parser.add_argument('password')
-    parser.add_argument('dataset_id')
+    parser.add_argument('datasetname')
+    parser.add_argument('--name', default="trainer-1",
+                        help="The user deleting the annotations")
     parser.add_argument('--anntype', default="map",
                         help="The namespace of the annotations")
-    parser.add_argument('--namespace', default="omero.batch_roi_export.map_ann",
+    parser.add_argument('--namespace',
+                        default="omero.batch_roi_export.map_ann",
                         help="The namespace of the annotations")
     parser.add_argument('--server', default="outreach.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.username, args.password, args.dataset_id, args.anntype, args.namespace,
-    	args.server, args.port)
+    run(args.name, args.password, args.datasetname, args.anntype,
+        args.namespace, args.server, args.port)
 
 
 if __name__ == '__main__':
