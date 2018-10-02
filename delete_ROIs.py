@@ -23,14 +23,18 @@ import argparse
 from omero.gateway import BlitzGateway
 
 
-def run(name, password, dataset_name, host, port):
+def run(name, password, dataset_name, dataset_id, host, port):
 
     conn = BlitzGateway(name, password, host=host, port=port)
     try:
         conn.connect()
         roi_service = conn.getRoiService()
-        datasets = conn.getObjects("Dataset",
-                                   attributes={"name": dataset_name})
+        datasets = []
+        if dataset_id >= 0:
+            datasets.append(conn.getObject("Dataset", dataset_id))
+        else:
+            datasets = conn.getObjects("Dataset",
+                                       attributes={"name": dataset_name})
         for dataset in datasets:
             print dataset.getId()
             for image in dataset.listChildren():
@@ -38,8 +42,8 @@ def run(name, password, dataset_name, host, port):
                                                  conn.SERVICE_OPTS)
                 if result is not None:
                     roi_ids = [roi.id.val for roi in result.rois]
-                    print "Deleting %s ROIs..." % len(roi_ids)
                     if len(roi_ids) > 0:
+                        print "Deleting %s ROIs..." % len(roi_ids)
                         conn.deleteObjects("Roi", roi_ids, wait=True)
     except Exception as exc:
             print(exc)
@@ -51,14 +55,18 @@ def run(name, password, dataset_name, host, port):
 def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('password')
-    parser.add_argument('datasetname')
+    parser.add_argument('--datasetid', default=-1,
+                        help="The ID of the dataset")
+    parser.add_argument('--datasetname', default="",
+                        help="The name of the dataset")
     parser.add_argument('--name', default="trainer-1",
                         help="The user deleting the rois")
     parser.add_argument('--server', default="outreach.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.name, args.password, args.datasetname, args.server, args.port)
+    run(args.name, args.password, args.datasetname, args.datasetid,
+        args.server, args.port)
 
 
 if __name__ == '__main__':
