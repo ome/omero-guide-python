@@ -70,7 +70,17 @@ def run(username, password, host, port):
               "Michael Rosbash",
               "Carol Greider",
               "Yoshinori Ohsumi",
-              "Rosalyn Yalow"]
+              "Rosalyn Yalow",
+              "Amedeo Avogadro",
+              "Virginia Apgar",
+              "Kristian Birkeland"
+              "Mary Anning",
+              "Chen-Ning Yang",
+              "Stephanie Kwolek",
+              "Jagadish Bose",
+              "Rita Levi-Montalcini",
+              "Susumu Tonegawa",
+              "Irene Joliot-Curie"]
 
     conn = BlitzGateway(username, password, host=host, port=port)
     try:
