@@ -73,7 +73,7 @@ def run(username, password, host, port):
               "Rosalyn Yalow",
               "Amedeo Avogadro",
               "Virginia Apgar",
-              "Kristian Birkeland"
+              "Kristian Birkeland",
               "Mary Anning",
               "Chen-Ning Yang",
               "Stephanie Kwolek",
