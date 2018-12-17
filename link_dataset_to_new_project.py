@@ -33,7 +33,7 @@ from omero.rtypes import rstring
 
 def run(password, project_name, dataset_name, host, port):
 
-    for user_number in range(1, 41):
+    for user_number in range(1, 3):
         username = "user-%s" % user_number
         print username
         conn = BlitzGateway(username, password, host=host, port=port)
@@ -44,14 +44,21 @@ def run(password, project_name, dataset_name, host, port):
             update_service = conn.getUpdateService()
             project = update_service.saveAndReturnObject(project)
 
-            ds = conn.getObject("Dataset", attributes={'name': dataset_name},
-                                opts={'owner': conn.getUserId()})
-            if ds is None:
+            params = omero.sys.ParametersI()
+            params.addString('username', username)
+            query = "from Dataset where name='%s' \
+                     AND details.owner.omeName=:username" % target
+            service = conn.getQueryService()
+            ds_list = service.findAllByQuery(query, params, conn.SERVICE_OPTS)
+
+            if ds_list is None:
                 print "No dataset with name %s found" % dataset_name
                 continue
 
-            dataset_id = ds.getId()
-            print username, dataset_id
+            for ds in ds_list:
+                dataset_id = ds.getId()
+                print username, dataset_id
+                date = ds.getAcquisitionDate()
 
             link = ProjectDatasetLinkI()
             link.setParent(ProjectI(project.getId().getValue(), False))
