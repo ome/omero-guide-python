@@ -37,11 +37,19 @@ FOLDER=${FOLDER:-siRNAi-HeLa}
 NUMBER=${NUMBER:-40}
 OMEUSER=${OMEUSER:-user}
 DATATYPE=${DATATYPE:-dataset}
+IMPORTTYPE=${IMPORTTYPE:-normal}
+CONTAINERS=${CONTAINERS:-idr0021-scripts/idr0021-experimentA-containers.omero}
+BULKFILE=${BULKFILE:-idr0021-scripts/idr0021-experimentA-bulk.yml}
 for ((i=1;i<=$NUMBER;i++));
 do  $OMEROPATH login --sudo ${SUDOER} -u $OMEUSER-$i -s $HOST -w $PASSWORD
     if [ "$DATATYPE" = "dataset" ]; then
-        DatasetId=$($OMEROPATH obj new Dataset name=$FOLDER)
-        $OMEROPATH import -d $DatasetId --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
+        if [ "$IMPORTTYPE" = "normal" ]; then
+            DatasetId=$($OMEROPATH obj new Dataset name=$FOLDER)
+            $OMEROPATH import -d $DatasetId --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
+        elif [ "$IMPORTTYPE" = "bulk" ]; then
+            $OMEROPATH load "/OMERO/in-place-import/$CONTAINERS"
+            $OMEROPATH import --bulk "/OMERO/in-place-import/$BULKFILE"
+        fi
     elif [ "$DATATYPE" = "plate" ]; then
         $OMEROPATH import --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
     fi
