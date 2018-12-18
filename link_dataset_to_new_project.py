@@ -24,6 +24,7 @@ for users user-1 through user-40.
 """
 
 import argparse
+import omero
 from omero.gateway import BlitzGateway
 from omero.model import DatasetI
 from omero.model import ProjectDatasetLinkI
@@ -47,7 +48,7 @@ def run(password, project_name, dataset_name, host, port):
             params = omero.sys.ParametersI()
             params.addString('username', username)
             query = "from Dataset where name='%s' \
-                     AND details.owner.omeName=:username" % target
+                     AND details.owner.omeName=:username" % dataset_name
             service = conn.getQueryService()
             ds_list = service.findAllByQuery(query, params, conn.SERVICE_OPTS)
 
@@ -56,9 +57,8 @@ def run(password, project_name, dataset_name, host, port):
                 continue
 
             for ds in ds_list:
-                dataset_id = ds.getId()
+                dataset_id = ds.getId().getValue()
                 print username, dataset_id
-                date = ds.getAcquisitionDate()
 
             link = ProjectDatasetLinkI()
             link.setParent(ProjectI(project.getId().getValue(), False))
