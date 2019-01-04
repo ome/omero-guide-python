@@ -34,7 +34,7 @@ from omero.rtypes import rstring
 
 def run(password, project_name, dataset_name, host, port):
 
-    for user_number in range(1, 3):
+    for user_number in range(1, 51):
         username = "user-%s" % user_number
         print username
         conn = BlitzGateway(username, password, host=host, port=port)
