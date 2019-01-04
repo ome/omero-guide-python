@@ -80,7 +80,7 @@ def run(password, project_name, dataset_name, host, port):
             link.setChild(DatasetI(dataset_id, False))
             conn.getUpdateService().saveObject(link)
         except Exception as exc:
-            print "Error while creating project: %s" % str(exc)
+            print "Error while linking to project: %s" % str(exc)
         finally:
             conn.close()
 
