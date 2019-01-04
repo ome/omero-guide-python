@@ -47,8 +47,10 @@ def run(password, project_name, dataset_name, host, port):
 
             params = omero.sys.ParametersI()
             params.addString('username', username)
+            # make sure only one result is returned by query
+            params.page(0, 1)
             query = "from Dataset where name='%s' \
-                     AND details.owner.omeName=:username" % dataset_name
+                     AND details.owner.omeName=:username ORDER BY id DESC" % dataset_name
             service = conn.getQueryService()
             ds_list = service.findAllByQuery(query, params, conn.SERVICE_OPTS)
 
@@ -56,9 +58,8 @@ def run(password, project_name, dataset_name, host, port):
                 print "No dataset with name %s found" % dataset_name
                 continue
 
-            for ds in ds_list:
-                dataset_id = ds.getId().getValue()
-                print username, dataset_id
+            dataset_id = ds_list[0].getId().getValue()
+            print username, dataset_id
 
             link = ProjectDatasetLinkI()
             link.setParent(ProjectI(project.getId().getValue(), False))
