@@ -17,11 +17,11 @@
 #
 # ------------------------------------------------------------------------------
 
-# This script imports in-place data for 40 different users by default, 
-# user-1 through user-40 into a target dataset.
+# This script imports in-place data for 50 different users by default,
+# user-1 through user-50 into a target dataset.
 # The data is imported by a dedicated user with restricted admin
 # privileges on behalf of other users 
-# i.e. after import each of the 40 users has their own batch of data.
+# i.e. after import each of the 50 users has their own batch of data.
 # Data can also be imported for trainers.
 # To import a dataset for trainers run for example
 # OMEUSER=trainer NUMBER=2 bash in_place_import_as.sh
@@ -34,7 +34,7 @@ OMEROPATH=${OMEROPATH:-/opt/omero/server/OMERO.server/bin/omero}
 PASSWORD=${PASSWORD:-ome}
 HOST=${HOST:-outreach.openmicroscopy.org}
 FOLDER=${FOLDER:-siRNAi-HeLa}
-NUMBER=${NUMBER:-40}
+NUMBER=${NUMBER:-50}
 OMEUSER=${OMEUSER:-user}
 DATATYPE=${DATATYPE:-dataset}
 IMPORTTYPE=${IMPORTTYPE:-normal}

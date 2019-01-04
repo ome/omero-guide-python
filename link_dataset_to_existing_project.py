@@ -20,7 +20,7 @@
 
 """
 This script looks for a specified project and links it to the specified Dataset
-for users user-1 through user-40.
+for users user-1 through user-50.
 """
 
 import argparse

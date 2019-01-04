@@ -20,7 +20,7 @@
 
 """
 This script creates a new project and links it to the specified Datasets
-for users user-1 through user-40.
+for users user-1 through user-50.
 
 Datasets can be specified by a list, passing a "-d $DATASETNAME1 -d $DATASETNAME2 ..."
 pattern to this script.
@@ -42,7 +42,7 @@ from omero.rtypes import rstring
 
 def run(password, project_name, dataset_names, host, port):
 
-    for user_number in range(1, 3):
+    for user_number in range(1, 51):
         username = "user-%s" % user_number
         print username
         conn = BlitzGateway(username, password, host=host, port=port)
