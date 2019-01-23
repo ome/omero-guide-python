@@ -22,7 +22,7 @@
 
 """
 This script changes the channel names on all images contained in a Dataset
-with a specified name belonging to users user-1 through user-40.
+with a specified name belonging to users user-1 through user-50.
 Each calibration change is made by the owner of the Dataset and the images
 themselves.
 """
@@ -33,7 +33,7 @@ from omero.gateway import BlitzGateway
 
 def run(password, target, host, port):
 
-    for user_number in range(1, 41):
+    for user_number in range(1, 51):
         username = "user-%s" % user_number
         print username
         conn = BlitzGateway(username, password, host=host, port=port)

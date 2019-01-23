@@ -20,7 +20,7 @@
 # ------------------------------------------------------------------------------
 
 """
-This script changes the password for users user-1 through user-40.
+This script changes the password for users user-1 through user-50.
 It also changes the password of trainer-1 and trainer-2
 The change must be done by an admin e.g. trainer-1.
 """
@@ -37,7 +37,7 @@ def run(password, new_password, admin_name, host, port):
     client.sf.setSecurityPassword(password)
     admin = session.getAdminService()
 
-    for i in range(1, 41):
+    for i in range(1, 51):
         user = 'user-%s' % i
         print user
         admin.changeUserPassword(user, rstring(new_password))

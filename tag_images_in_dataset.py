@@ -42,7 +42,7 @@ images_to_tag = ["A1.pattern1.tif",
 
 def run(password, admin_name, target, tag, host, port):
 
-    for i in range(1, 41):
+    for i in range(1, 51):
 
         username = "user-%s" % i
         print username

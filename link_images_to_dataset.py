@@ -22,7 +22,7 @@
 
 """
 This script creates a new dataset and links all images with a given name
-to it for users user-1 through user-40.
+to it for users user-1 through user-50.
 """
 
 import argparse
@@ -32,7 +32,7 @@ from omero.gateway import BlitzGateway
 
 def run(password, dataset_name, target, host, port):
 
-    for i in range(1, 41):
+    for i in range(1, 51):
         username = "user-%s" % i
         print username
         conn = BlitzGateway(username, password, host=host, port=port)

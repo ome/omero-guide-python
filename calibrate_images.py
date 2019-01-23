@@ -22,7 +22,7 @@
 """
 This script changes the calibration on all images contained in a Dataset
 with a specified name belonging to users user-1 through
-user-40.
+user-50.
 Each calibration change is made by the owner of the Dataset and the images
 themselves.
 """
@@ -35,7 +35,7 @@ from omero.model.enums import UnitsLength
 
 def run(password, target, host, port):
 
-    for i in range(1, 41):
+    for i in range(1, 51):
 
         username = "user-%s" % i
         print username

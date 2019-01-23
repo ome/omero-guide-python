@@ -21,7 +21,7 @@
 
 """
 This script sets the timestamps for all images within a specified dataset
-for users user-1 through user-40
+for users user-1 through user-50
 """
 
 import argparse
@@ -36,7 +36,7 @@ from omero.rtypes import rint, unwrap
 
 def run(password, target, host, port):
 
-    for i in range(1, 41):
+    for i in range(1, 51):
 
         username = "user-%s" % i
         print username

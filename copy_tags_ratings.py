@@ -41,7 +41,7 @@ RATING_NS = "openmicroscopy.org/omero/insight/rating"
 
 def link_tags(conn, datasetname, image_tag_links, image_ratings):
 
-    for i in range(1, 41):
+    for i in range(1, 51):
         username = "user-%s" % i
         print username
         exp = conn.getAdminService().lookupExperimenter(username)

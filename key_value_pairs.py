@@ -21,7 +21,7 @@
 
 """
 This script adds Key-Value Pairs to images in a Dataset with the specified name
-for 40 users (user-1 through user-40). The Key-Value Pairs are defined in the
+for 50 users (user-1 through user-50). The Key-Value Pairs are defined in the
 variables kvp_setx and are added to the images inside the dataset according to
 the features in the images in the list images_kvp_order.
 The script could be simplified by adding the Key-Value Pairs randomly to the
@@ -35,7 +35,7 @@ from omero.gateway import BlitzGateway
 
 def run(password, target, host, port):
 
-    for i in range(1, 41):
+    for i in range(1, 51):
 
         username = "user-%s" % i
         print username

@@ -23,7 +23,7 @@
 """
 This script first finds and lists, then cleans up objects
 (ROIs, Ratings and Tags) attached to all images contained in a Dataset with a
-specified name belonging to users user-1 through user-40
+specified name belonging to users user-1 through user-50
 and to the specified administrator.
 The listing is done by each user on their own data.
 The information is collected and the final cleanup is done by an
@@ -153,7 +153,7 @@ def run(password, admin_name, target, image, host, port):
         conn.SERVICE_OPTS.setOmeroGroup("-1")
         list_objs(conn, admin_name, target)
         cut_link(conn, admin_name, image)
-        for i in range(1, 41):
+        for i in range(1, 51):
             username = "user-%s" % i
             print username
             list_objs(conn, username, target)
