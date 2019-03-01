@@ -23,6 +23,12 @@
 This a basic OMERO script that runs server-side.
 """
 
+import omero.scripts as scripts
+from omero.rtypes import rlong
+from omero.gateway import BlitzGateway
+from omero.rtypes import robject, rstring
+
+
 def run(conn, params):
     """
     Load the Images.
@@ -45,7 +51,7 @@ def run(conn, params):
 
     for image in images:
         print "---- Processing image", image.id
-    return images   
+    return images
 
 
 if __name__ == "__main__":
