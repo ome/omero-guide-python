@@ -37,9 +37,9 @@ FOLDER=${FOLDER:-siRNAi-HeLa}
 NUMBER=${NUMBER:-50}
 OMEUSER=${OMEUSER:-user}
 DATATYPE=${DATATYPE:-dataset}
-IMPORTTYPE=${IMPORTTYPE:-normal}
-CONTAINERS=${CONTAINERS:-idr0021-scripts/idr0021-experimentA-containers.omero}
+IMPORTTYPE=${IMPORTTYPE:-bulk}
 BULKFILE=${BULKFILE:-idr0021-scripts/idr0021-experimentA-bulk.yml}
+PROJECTNAME=${PROJECTNAME:-idr0021}
 for ((i=1;i<=$NUMBER;i++));
 do  $OMEROPATH login --sudo ${SUDOER} -u $OMEUSER-$i -s $HOST -w $PASSWORD
     if [ "$DATATYPE" = "dataset" ]; then
@@ -47,7 +47,21 @@ do  $OMEROPATH login --sudo ${SUDOER} -u $OMEUSER-$i -s $HOST -w $PASSWORD
             DatasetId=$($OMEROPATH obj new Dataset name=$FOLDER)
             $OMEROPATH import -d $DatasetId --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
         elif [ "$IMPORTTYPE" = "bulk" ]; then
-            $OMEROPATH load "/OMERO/in-place-import/$CONTAINERS"
+            # Create the project
+            projectId=`$OMEROPATH obj new Project name=$PROJECTNAME`
+            # Get the name of the filepaths.tsv file from the bulk.yml
+            tsv=`grep path: /OMERO/in-place-import/$BULKFILE | cut -d '"' -f2`
+            # Assume it is in the same directory as the bulk.yml
+            tsvdir=$(dirname `readlink -f ${BULKFILE}`)
+            filepaths=${tsvdir}/${tsv}
+            # Find out which datasets needs to be created, and create them
+            datasets=`cat $filepaths | cut -f1 | cut -d ':' -f3 | uniq`
+            for dataset in $datasets
+            do
+                datasetId=`$OMEROPATH obj new Dataset name=$dataset`
+                linkId=`$OMEROPATH obj new ProjectDatasetLink parent=$projectId child=$datasetId`
+            done
+            # Then launch the import
             $OMEROPATH import --bulk "/OMERO/in-place-import/$BULKFILE"
         fi
     elif [ "$DATATYPE" = "plate" ]; then
