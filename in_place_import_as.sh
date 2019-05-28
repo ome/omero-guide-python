@@ -45,12 +45,12 @@ do  $OMEROPATH login --sudo ${SUDOER} -u $OMEUSER-$i -s $HOST -w $PASSWORD
     if [ "$DATATYPE" = "dataset" ]; then
         if [ "$IMPORTTYPE" = "normal" ]; then
             DatasetId=$($OMEROPATH obj new Dataset name=$FOLDER)
-            $OMEROPATH import -d $DatasetId --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
+            $OMEROPATH import -d $DatasetId --transfer=ln_s $FOLDER
         elif [ "$IMPORTTYPE" = "bulk" ]; then
             # Create the project
             projectId=`$OMEROPATH obj new Project name=$PROJECTNAME`
             # Get the name of the filepaths.tsv file from the bulk.yml
-            tsv=`grep path: /OMERO/in-place-import/$BULKFILE | cut -d '"' -f2`
+            tsv=`grep path: $BULKFILE | cut -d '"' -f2`
             # Assume it is in the same directory as the bulk.yml
             tsvdir=$(dirname `readlink -f ${BULKFILE}`)
             filepaths=${tsvdir}/${tsv}
@@ -62,10 +62,10 @@ do  $OMEROPATH login --sudo ${SUDOER} -u $OMEUSER-$i -s $HOST -w $PASSWORD
                 linkId=`$OMEROPATH obj new ProjectDatasetLink parent=$projectId child=$datasetId`
             done
             # Then launch the import
-            $OMEROPATH import --bulk "/OMERO/in-place-import/$BULKFILE"
+            $OMEROPATH import --bulk $BULKFILE
         fi
     elif [ "$DATATYPE" = "plate" ]; then
-        $OMEROPATH import --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
+        $OMEROPATH import --transfer=ln_s $FOLDER
     fi
     $OMEROPATH logout
 done
