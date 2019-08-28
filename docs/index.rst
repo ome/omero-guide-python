@@ -4,14 +4,6 @@ Python API
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    simple-frap-example
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
