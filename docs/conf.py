@@ -49,7 +49,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'guide template'
+project = u'Python API guide'
 copyright = u'2019, Open Microscopy Environment'
 
 # The version info for the project you're documenting, acts as replacement for
