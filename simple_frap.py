@@ -34,7 +34,10 @@ from omero.rtypes import robject, rstring
 from PIL import Image
 
 import numpy as np
+
 try:
+    import matplotlib
+    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 except (ImportError, RuntimeError):
     plt = None
