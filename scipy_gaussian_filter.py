@@ -28,7 +28,7 @@ import omero
 
 import time
 import omero.scripts as scripts
-from omero.rtypes import wrap, rlong
+from omero.rtypes import rlong, robject, rstring, wrap
 from omero.gateway import MapAnnotationWrapper, DatasetWrapper
 from omero.gateway import BlitzGateway
 from omero.rtypes import *  # noqa
@@ -112,7 +112,7 @@ def add_map_annotation(conn, image, params):
     sigma = params.get("Sigma")
     key_value_data = [["Kernel Window Size", str(window_size)],
                       ["Sigma", str(sigma)]]
-    print "Adding MAP", key_value_data, image.getId()
+    print("Adding MAP", key_value_data, image.getId())
     map_ann = MapAnnotationWrapper(conn)
     # Use 'client' namespace to allow editing in Insight & web
     map_ann.setNs(omero.constants.metadata.NSCLIENTMAPANNOTATION)
@@ -393,7 +393,7 @@ if __name__ == "__main__":
         for key in client.getInputKeys():
             if client.getInput(key):
                 scriptParams[key] = client.getInput(key, unwrap=True)
-        print scriptParams
+        print(scriptParams)
 
         # wrap client to use the Blitz Gateway
         conn = BlitzGateway(client_obj=client)

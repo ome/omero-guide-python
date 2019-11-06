@@ -254,19 +254,19 @@ def run(conn, params):
     frap_plots = []
 
     for image in images:
-        print "---- Processing image", image.id
+        print("---- Processing image", image.id)
         result = roi_service.findByImage(image.getId(), None)
 
         # Simply use any Ellipse we find...
         shape_id = None
         for roi in result.rois:
-            print "ROI:  ID:", roi.getId().getValue()
+            print("ROI:  ID:", roi.getId().getValue())
             for s in roi.copyShapes():
                 if type(s) == omero.model.EllipseI:
                     shape_id = s.id.val
-        print "Shape:", shape_id
+        print("Shape:", shape_id)
         if shape_id is None:
-            print "  No Ellipse found for this image"
+            print("  No Ellipse found for this image")
             continue
 
         # Get pixel intensities for first Channel
@@ -279,7 +279,7 @@ def run(conn, params):
                                                         the_z, t, [the_c])
             meanvalues.append(stats[0].mean[the_c])
 
-        print meanvalues
+        print(meanvalues)
 
         # Add values as a Map Annotation on the image
         key_value_data = [[str(t), str(meanvalues[t])] for t in range(size_t)]
@@ -340,7 +340,7 @@ if __name__ == "__main__":
         for key in client.getInputKeys():
             if client.getInput(key):
                 scriptParams[key] = client.getInput(key, unwrap=True)
-        print scriptParams
+        print(scriptParams)
 
         # wrap client to use the Blitz Gateway
         conn = BlitzGateway(client_obj=client)

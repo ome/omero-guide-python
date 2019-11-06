@@ -25,7 +25,7 @@
 import omero.scripts as scripts
 from omero.gateway import BlitzGateway, MapAnnotationWrapper,\
     FileAnnotationWrapper
-from omero.rtypes import unwrap, rstring, rlong, robject
+from omero.rtypes import rint, rlong, robject, rstring, unwrap
 from omero.grid import DoubleColumn, ImageColumn
 from omero.model import OriginalFileI
 from omero.constants.namespaces import NSBULKANNOTATIONS
@@ -38,7 +38,7 @@ BATCH_ROI_EXPORT_NS = "omero.batch_roi_export.map_ann"
 
 def log(data):
     """Handle logging or printing in one place."""
-    print data
+    print(data)
 
 
 def get_export_data(conn, script_params, image):
@@ -345,7 +345,8 @@ def batch_roi_export(conn, script_params):
             for k in SUMMARY_COL_NAMES:
                 row[k] = image_data.get(k)[i]
             csv_data.append(row)
-        csv_ann = write_csv(conn, csv_data, "batch_roi_export.csv", image_csv_cols)
+        csv_ann = write_csv(conn, csv_data, "batch_roi_export.csv",
+                            image_csv_cols)
         project.linkAnnotation(csv_ann)
 
     message = "Exported %s shapes" % len(export_data)
@@ -370,9 +371,9 @@ def run_script():
             description="List of Dataset IDs or Image IDs.").ofType(rlong(0)),
 
         scripts.List(
-            "Intensity_For_Channels", grouping="4", default=[1L, 2L, 3L, 4L],
+            "Intensity_For_Channels", grouping="4", default=[1, 2, 3, 4],
             description="Indices of Channels to measure intensity."
-            ).ofType(rlong(0)),
+            ).ofType(rint(0)),
 
         scripts.Bool(
             "Export_All_Planes", grouping="5",

@@ -50,7 +50,7 @@ def run(conn, params):
         return None
 
     for image in images:
-        print "---- Processing image", image.id
+        print("---- Processing image", image.id)
     return images
 
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
         for key in client.getInputKeys():
             if client.getInput(key):
                 scriptParams[key] = client.getInput(key, unwrap=True)
-        print scriptParams
+        print(scriptParams)
 
         # wrap client to use the Blitz Gateway
         conn = BlitzGateway(client_obj=client)
