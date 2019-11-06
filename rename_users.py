@@ -24,7 +24,6 @@ This script sets the FirstName and LastName for user-1 to user-50
 """
 
 import argparse
-import omero
 from omero.rtypes import rstring
 from omero.gateway import BlitzGateway
 
@@ -32,55 +31,55 @@ from omero.gateway import BlitzGateway
 def run(username, password, host, port):
 
     full_names = ["Francis Crick",
-              "Linda Buck",
-              "Charles Darwin",
-              "Marie Curie",
-              "Alexander Fleming",
-              "Rosalind Franklin",
-              "Robert Hooke",
-              "Jane Goodall",
-              "Gregor Mendel",
-              "Barbara McClintock",
-              "Louis Pasteur",
-              "Ada Lovelace",
-              "Linus Pauling",
-              "Frances Kelsey",
-              "Maurice Wilkins",
-              "Florence Nightingale",
-              "John Sulston",
-              "Elizabeth Blackwell",
-              "Richard Dawkins",
-              "Caroline Dean",
-              "Stephen Reicher",
-              "Wendy Barclay",
-              "Paul Nurse",
-              "Jennifer Doudna",
-              "Adrian Thomas",
-              "Ann Clarke",
-              "Oswald Avery",
-              "Liz Sockett",
-              "Erwin Chargaff",
-              "Tracey Rogers",
-              "Ronald Fisher",
-              "Rachel Carson",
-              "William Harvey",
-              "Nettie Stevens",
-              "Jeffrey Hall",
-              "Youyou Tu",
-              "Michael Rosbash",
-              "Carol Greider",
-              "Yoshinori Ohsumi",
-              "Rosalyn Yalow",
-              "Amedeo Avogadro",
-              "Virginia Apgar",
-              "Kristian Birkeland",
-              "Mary Anning",
-              "Chen-Ning Yang",
-              "Stephanie Kwolek",
-              "Jagadish Bose",
-              "Rita Levi-Montalcini",
-              "Susumu Tonegawa",
-              "Irene Joliot-Curie"]
+                  "Linda Buck",
+                  "Charles Darwin",
+                  "Marie Curie",
+                  "Alexander Fleming",
+                  "Rosalind Franklin",
+                  "Robert Hooke",
+                  "Jane Goodall",
+                  "Gregor Mendel",
+                  "Barbara McClintock",
+                  "Louis Pasteur",
+                  "Ada Lovelace",
+                  "Linus Pauling",
+                  "Frances Kelsey",
+                  "Maurice Wilkins",
+                  "Florence Nightingale",
+                  "John Sulston",
+                  "Elizabeth Blackwell",
+                  "Richard Dawkins",
+                  "Caroline Dean",
+                  "Stephen Reicher",
+                  "Wendy Barclay",
+                  "Paul Nurse",
+                  "Jennifer Doudna",
+                  "Adrian Thomas",
+                  "Ann Clarke",
+                  "Oswald Avery",
+                  "Liz Sockett",
+                  "Erwin Chargaff",
+                  "Tracey Rogers",
+                  "Ronald Fisher",
+                  "Rachel Carson",
+                  "William Harvey",
+                  "Nettie Stevens",
+                  "Jeffrey Hall",
+                  "Youyou Tu",
+                  "Michael Rosbash",
+                  "Carol Greider",
+                  "Yoshinori Ohsumi",
+                  "Rosalyn Yalow",
+                  "Amedeo Avogadro",
+                  "Virginia Apgar",
+                  "Kristian Birkeland",
+                  "Mary Anning",
+                  "Chen-Ning Yang",
+                  "Stephanie Kwolek",
+                  "Jagadish Bose",
+                  "Rita Levi-Montalcini",
+                  "Susumu Tonegawa",
+                  "Irene Joliot-Curie"]
 
     conn = BlitzGateway(username, password, host=host, port=port)
     try:
@@ -88,7 +87,7 @@ def run(username, password, host, port):
         admin_service = conn.getAdminService()
         for i, full_name in enumerate(full_names):
             username = 'user-%s' % (i + 1)
-            print username, full_name
+            print(username, full_name)
             exp = admin_service.lookupExperimenter(username)
             names = full_name.split(" ")
             exp.firstName = rstring(names[0])
@@ -96,7 +95,7 @@ def run(username, password, host, port):
             admin_service.updateExperimenter(exp)
 
     except Exception as exc:
-            print "Error while renaming users: %s" % str(exc)
+        print("Error while renaming users: %s" % str(exc))
     finally:
         conn.close()
 

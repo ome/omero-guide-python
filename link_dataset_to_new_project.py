@@ -35,7 +35,7 @@ def run(password, project_name, dataset_name, host, port):
 
     for user_number in range(1, 41):
         username = "user-%s" % user_number
-        print username
+        print(username)
         conn = BlitzGateway(username, password, host=host, port=port)
         try:
             conn.connect()
@@ -47,18 +47,18 @@ def run(password, project_name, dataset_name, host, port):
             ds = conn.getObject("Dataset", attributes={'name': dataset_name},
                                 opts={'owner': conn.getUserId()})
             if ds is None:
-                print "No dataset with name %s found" % dataset_name
+                print("No dataset with name %s found" % dataset_name)
                 continue
 
             dataset_id = ds.getId()
-            print username, dataset_id
+            print(username, dataset_id)
 
             link = ProjectDatasetLinkI()
             link.setParent(ProjectI(project.getId().getValue(), False))
             link.setChild(DatasetI(dataset_id, False))
             conn.getUpdateService().saveObject(link)
         except Exception as exc:
-            print "Error while creating project: %s" % str(exc)
+            print("Error while creating project: %s" % str(exc))
         finally:
             conn.close()
 

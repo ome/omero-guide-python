@@ -31,7 +31,7 @@ from omero.gateway import BlitzGateway
 import requests
 
 
-base_url = "http://idr.openmicroscopy.org/webclient/api/"
+base_url = "https://idr.openmicroscopy.org/webclient/api/"
 map_ann_url = base_url + "annotations/?type=map"
 
 
@@ -65,26 +65,26 @@ def run(username, password, idr_id, local_id, host, port):
         idr_datasets = get_idr_datasets_as_dict(session, idr_id)
         for dataset in project.listChildren():
 
-            print "\n\nDataset", dataset.id, dataset.name
+            print("\n\nDataset", dataset.id, dataset.name)
             # Get IDR Dataset with same name:
             idr_dataset = idr_datasets.get(dataset.name)
             if idr_dataset is None:
-                print "    NO IDR Dataset found!"
+                print("    NO IDR Dataset found!")
                 continue
 
             idr_images = get_idr_images_as_dict(session, idr_dataset['id'])
             for image in dataset.listChildren():
 
-                print "Image", image.id, image.name
+                print("Image", image.id, image.name)
                 idr_image = idr_images[image.name]
                 if idr_image is None:
-                    print "    NO IDR Image found!"
+                    print("    NO IDR Image found!")
                     continue
 
                 # Get map annotations for image...
                 url = map_ann_url + "&image=%s" % idr_image['id']
                 map_anns = session.get(url).json()['annotations']
-                print "  adding ", len(map_anns), " map anns..."
+                print("  adding ", len(map_anns), " map anns...")
                 for ann in map_anns:
                     key_value_data = ann['values']
                     map_ann = omero.gateway.MapAnnotationWrapper(conn)
@@ -93,13 +93,14 @@ def run(username, password, idr_id, local_id, host, port):
                     map_ann.save()
                     image.linkAnnotation(map_ann)
     except Exception as exc:
-            print "Error while deleting annotations: %s" % str(exc)
+        print("Error while deleting annotations: %s" % str(exc))
     finally:
         conn.close()
 
 
 def main(args):
-    # Usage: $ python idr_get_map_annotation.py username password idr_id local_id
+    # Usage: $ python idr_get_map_annotation.py username
+    # password idr_id local_id
     parser = argparse.ArgumentParser()
     parser.add_argument('username')
     parser.add_argument('password')
@@ -109,8 +110,8 @@ def main(args):
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.username, args.password, args.idr_id, args.local_id, args.server,
-        args.port)
+    run(args.username, args.password, args.idr_id, args.local_id,
+        args.server, args.port)
 
 
 if __name__ == '__main__':

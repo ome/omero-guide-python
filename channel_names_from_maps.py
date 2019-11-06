@@ -35,27 +35,27 @@ def run(username, password, project_id, host, port):
         project = conn.getObject("Project", project_id)
 
         for dataset in project.listChildren():
-            print "\n\nDataset", dataset.id, dataset.name
+            print("\n\nDataset", dataset.id, dataset.name)
             for image in dataset.listChildren():
 
-                print "Image", image.id, image.name
+                print("Image", image.id, image.name)
                 ann = image.getAnnotation(NAMESPACE)
                 if ann is None:
-                    print " No annotation found"
+                    print(" No annotation found")
                     continue
                 keys = ann.getValue()
                 values = [kv[1] for kv in keys if kv[0] == MAP_KEY]
                 if len(values) == 0:
-                    print " No Key-Value found for key:", MAP_KEY
+                    print(" No Key-Value found for key:", MAP_KEY)
                 channels = values[0].split("; ")
-                print "Channels", channels
+                print("Channels", channels)
                 name_dict = {}
                 for c, ch_name in enumerate(channels):
                     name_dict[c + 1] = ch_name.split(":")[1]
                 conn.setChannelNames("Image", [image.id], name_dict,
                                      channelCount=None)
     except Exception as exc:
-            print "Error while changing names: %s" % str(exc)
+        print("Error while changing names: %s" % str(exc))
     finally:
         conn.close()
 

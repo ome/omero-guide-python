@@ -35,7 +35,7 @@ def run(password, target, host, port):
 
     for user_number in range(1, 51):
         username = "user-%s" % user_number
-        print username
+        print(username)
         conn = BlitzGateway(username, password, host=host, port=port)
         try:
             conn.connect()
@@ -43,15 +43,15 @@ def run(password, target, host, port):
             ds = conn.getObject("Dataset", attributes={'name': target},
                                 opts={'owner': conn.getUserId()})
             if ds is None:
-                print "No dataset with name %s found" % target
+                print("No dataset with name %s found" % target)
                 continue
 
-            print "Dataset", ds.getId()
+            print("Dataset", ds.getId())
 
             conn.setChannelNames("Dataset", [ds.getId()],
                                  {1: "H2B", 2: "nuclear lamina"})
         except Exception as exc:
-            print "Error while changing the channel names: %s" % str(exc)
+            print("Error while changing the channel names: %s" % str(exc))
         finally:
             # Close connection for each user when done
             conn.close()

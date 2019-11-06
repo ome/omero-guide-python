@@ -36,18 +36,17 @@ def run(name, password, dataset_name, dataset_id, host, port):
             datasets = conn.getObjects("Dataset",
                                        attributes={"name": dataset_name})
         for dataset in datasets:
-            print dataset.getId()
+            print(dataset.getId())
             for image in dataset.listChildren():
                 result = roi_service.findByImage(image.getId(), None,
                                                  conn.SERVICE_OPTS)
                 if result is not None:
                     roi_ids = [roi.id.val for roi in result.rois]
                     if len(roi_ids) > 0:
-                        print "Deleting %s ROIs..." % len(roi_ids)
+                        print("Deleting %s ROIs..." % len(roi_ids))
                         conn.deleteObjects("Roi", roi_ids, wait=True)
     except Exception as exc:
-            print(exc)
-            print "Error while deleting Rois: %s" % str(exc)
+        print("Error while deleting Rois: %s" % str(exc))
     finally:
         conn.close()
 

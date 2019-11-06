@@ -39,7 +39,7 @@ def run(password, target, host, port):
     for i in range(1, 51):
 
         username = "user-%s" % i
-        print username
+        print(username)
         conn = BlitzGateway(username, password, host=host, port=port)
         try:
             conn.connect()
@@ -53,11 +53,11 @@ def run(password, target, host, port):
                                                     conn.SERVICE_OPTS)
 
             if len(datasets) == 0:
-                print "No datasets with name %s found" % target
+                print("No datasets with name %s found" % target)
                 continue
             dataset_id = datasets[0].getId().getValue()
 
-            print 'dataset', dataset_id
+            print('dataset', dataset_id)
             params2 = omero.sys.ParametersI()
             params2.addId(dataset_id)
             query = "select l.child.id from DatasetImageLink l \
@@ -79,13 +79,13 @@ def run(password, target, host, port):
                 info_list = query_service.findAllByQuery(query, params,
                                                          conn.SERVICE_OPTS)
 
-                print 'info_list', len(info_list)
+                print('info_list', len(info_list))
 
                 if len(info_list) == 0:
-                    print "Creating info...", image.getSizeT()
+                    print("Creating info...", image.getSizeT())
                     info_list = []
                     for t_index in range(image.getSizeT()):
-                        print '  t', t_index
+                        print('  t', t_index)
                         info = PlaneInfoI()
                         info.theT = rint(t_index)
                         info.theZ = rint(0)
@@ -99,16 +99,16 @@ def run(password, target, host, port):
                     for info in info_list:
                         unwrap_t = unwrap(info.theT)
                         unwrap_z = unwrap(info.theZ)
-                        print 'theT %s, theZ %s' % (unwrap_t, unwrap_z)
+                        print('theT %s, theZ %s' % (unwrap_t, unwrap_z))
                         t_index = info.theT.getValue()
 
                         dt = t_index * delta_t
                         info.deltaT = TimeI(dt, UnitsTime.SECOND)
 
-                print "Saving info_list", len(info_list)
+                print("Saving info_list", len(info_list))
                 conn.getUpdateService().saveArray(info_list)
         except Exception as exc:
-            print "Error when setting the timestamps: %s" % str(exc)
+            print("Error when setting the timestamps: %s" % str(exc))
         finally:
             conn.close()
 

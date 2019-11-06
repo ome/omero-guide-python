@@ -46,7 +46,7 @@ obj_ids_rois = []
 
 def cut_link(conn, username, image):
     if image is None:
-        print "No image to handle"
+        print("No image to handle")
         return
     params = omero.sys.ParametersI()
     params.addString('username', username)
@@ -56,7 +56,7 @@ def cut_link(conn, username, image):
     images = query_service.findAllByQuery(query, params,
                                           conn.SERVICE_OPTS)
     if len(images) == 0:
-        print "No image with name %s found" % image
+        print("No image with name %s found" % image)
         return
     params = omero.sys.ParametersI()
     params.addLong('imageId', images[0].getId().getValue())
@@ -73,7 +73,7 @@ def cut_link(conn, username, image):
 
 def list_objs(conn, username, target):
     if target is None:
-        print "No dataset to handle"
+        print("No dataset to handle")
         return
     params = omero.sys.ParametersI()
     params.addString('username', username)
@@ -83,14 +83,14 @@ def list_objs(conn, username, target):
     datasets = query_service.findAllByQuery(query, params,
                                             conn.SERVICE_OPTS)
     if len(datasets) == 0:
-        print "No dataset with name %s found" % target
+        print("No dataset with name %s found" % target)
         return
 
     dataset_id = datasets[0].getId().getValue()
     dataset = conn.getObject("Dataset", dataset_id)
     roi_service = conn.getRoiService()
     for image in dataset.listChildren():
-        print image.getId()
+        print(image.getId())
         result = roi_service.findByImage(image.getId(), None,
                                          conn.SERVICE_OPTS)
         if result is not None:
@@ -99,14 +99,14 @@ def list_objs(conn, username, target):
                 obj_ids_rois.append(roi_id)
 
             if not len(result.rois) == 0:
-                print 'Will delete %s ROIs on image %s of \
-                       %s' % (len(result.rois), image.getId(), username)
+                print('Will delete %s ROIs on image %s of \
+                       %s' % (len(result.rois), image.getId(), username))
 
         for ann in image.listAnnotations():
             if ann.OMERO_TYPE == omero.model.LongAnnotationI:
                 obj_ids_rating.append(ann.getId())
-                print 'Will delete rating %s on image \
-                       %s of %s' % (ann.getId(), image.getId(), username)
+                print('Will delete rating %s on image \
+                       %s of %s' % (ann.getId(), image.getId(), username))
             elif ann.OMERO_TYPE == omero.model.TagAnnotationI:
                 params = omero.sys.ParametersI()
                 params.add('imageId', wrap(image.getId()))
@@ -117,32 +117,32 @@ def list_objs(conn, username, target):
                                                    conn.SERVICE_OPTS)
                 for linkId in linkIds:
                     obj_ids_taglinks.append(linkId[0].getValue())
-                    print 'Will delete link %s on image \
+                    print('Will delete link %s on image \
                            %s of tag %s of %s' % (linkId[0].getValue(),
                                                   image.getId(),
-                                                  ann.getId(), username)
+                                                  ann.getId(), username))
 
 
 def delete_objs(conn):
     if len(obj_ids_taglinks) > 0:
-        print 'deleting', len(obj_ids_taglinks), ' tag links'
+        print('deleting', len(obj_ids_taglinks), ' tag links')
         conn.deleteObjects("ImageAnnotationLink", obj_ids_taglinks,
                            deleteAnns=True, deleteChildren=False, wait=True)
     else:
-        print 'No tag links to delete'
+        print('No tag links to delete')
     if len(obj_ids_rois) > 0:
-        print 'deleting %s ROIs' % len(obj_ids_rois)
+        print('deleting %s ROIs' % len(obj_ids_rois))
         handle = conn.deleteObjects("Roi", obj_ids_rois, deleteAnns=True,
                                     deleteChildren=True)
         conn.c.waitOnCmd(handle, loops=500, ms=500, closehandle=True)
     else:
-        print 'No ROIs to delete'
+        print('No ROIs to delete')
     if len(obj_ids_rating) > 0:
-        print 'deleting %s ratings' % len(obj_ids_rating)
+        print('deleting %s ratings' % len(obj_ids_rating))
         conn.deleteObjects("LongAnnotation", obj_ids_rating, deleteAnns=True,
                            deleteChildren=False, wait=True)
     else:
-        print 'No ratings to delete'
+        print('No ratings to delete')
 
 
 def run(password, admin_name, target, image, host, port):
@@ -155,13 +155,13 @@ def run(password, admin_name, target, image, host, port):
         cut_link(conn, admin_name, image)
         for i in range(1, 51):
             username = "user-%s" % i
-            print username
+            print(username)
             list_objs(conn, username, target)
             cut_link(conn, username, image)
 
         delete_objs(conn)
     except Exception as exc:
-        print "Error while cleaning the objects: %s" % str(exc)
+        print("Error while cleaning the objects: %s" % str(exc))
     finally:
         conn.close()
 

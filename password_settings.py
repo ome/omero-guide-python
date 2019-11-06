@@ -39,12 +39,12 @@ def run(password, new_password, admin_name, host, port):
 
     for i in range(1, 51):
         user = 'user-%s' % i
-        print user
+        print(user)
         admin.changeUserPassword(user, rstring(new_password))
-    
+
     for i in range(1, 3):
         user = 'trainer-%s' % i
-        print user
+        print(user)
         admin.changeUserPassword(user, rstring(new_password))
 
     client.closeSession()
