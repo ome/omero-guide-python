@@ -22,13 +22,17 @@
 This script creates a new project and links it to the specified Datasets
 for users user-1 through user-50.
 
-Datasets can be specified by a list, passing a "-d $DATASETNAME1 -d $DATASETNAME2 ..."
+Datasets can be specified by a list,
+passing a "-d $DATASETNAME1 -d $DATASETNAME2 ..."
 pattern to this script.
 
 For example, to link all the 10 datasets of the idr0021 study to a new
 project "idr0021" use:
 
-python link_dataset_to_new_project.py $PWD idr0021  -d CDK5RAP2-C -d CENT2 -d CEP120/20111106 -d CEP120/20111209 -d CEP152 -d CEP192-M -d CPAP -d NEDD1-C1 -d PCNT-N1 -d TUBG1-N
+python link_dataset_to_new_project.py
+       $PWD idr0021  -d CDK5RAP2-C -d CENT2 -d CEP120/20111106
+       -d CEP120/20111209 -d CEP152 -d CEP192-M -d CPAP -d NEDD1-C1
+       -d PCNT-N1 -d TUBG1-N
 """
 
 import argparse
