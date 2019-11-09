@@ -21,7 +21,7 @@
 
 """
 This script adds Key-Value Pairs to images in a Dataset with the specified name
-for 40 users (user-1 through user-40). The Key-Value Pairs are defined in the
+for 50 users (user-1 through user-50). The Key-Value Pairs are defined in the
 variables kvp_setx and are added to the images inside the dataset according to
 the features in the images in the list images_kvp_order.
 The script could be simplified by adding the Key-Value Pairs randomly to the
@@ -35,10 +35,10 @@ from omero.gateway import BlitzGateway
 
 def run(password, target, host, port):
 
-    for i in range(1, 41):
+    for i in range(1, 51):
 
         username = "user-%s" % i
-        print username
+        print(username)
         conn = BlitzGateway(username, password, host=host, port=port)
         try:
             conn.connect()
@@ -51,11 +51,11 @@ def run(password, target, host, port):
                                                    conn.SERVICE_OPTS)
 
             if len(dataset) == 0:
-                print "No dataset with name %s found" % target
+                print("No dataset with name %s found" % target)
                 continue
             dataset_id = dataset[0].getId().getValue()
 
-            print 'dataset', dataset_id
+            print('dataset', dataset_id)
             dataset = conn.getObject("Dataset", dataset_id)
 
             kvp_set1 = [["mitomycin-A", "0mM"], ["PBS", "10mM"],
@@ -108,7 +108,7 @@ def run(password, target, host, port):
             for image in dataset.listChildren():
 
                 if image.getName() in images_kvp_order:
-                    print images_kvp_order[image.getName()]
+                    print(images_kvp_order[image.getName()])
 
                     key_value_data = images_kvp_order[image.getName()]
                     map_ann = omero.gateway.MapAnnotationWrapper(conn)
@@ -119,9 +119,9 @@ def run(password, target, host, port):
                     map_ann.save()
                     # NB: only link a client map annotation to a single object
                     image.linkAnnotation(map_ann)
-                    print 'linking to image', image.getName()
+                    print('linking to image', image.getName())
         except Exception as exc:
-            print "Error while setting key-value pairs: %s" % str(exc)
+            print("Error while setting key-value pairs: %s" % str(exc))
         finally:
             conn.close()
 

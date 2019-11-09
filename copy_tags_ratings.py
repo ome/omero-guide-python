@@ -30,28 +30,27 @@ New Ratings created, belonging to user-x.
 """
 
 import argparse
-import omero
 from omero.gateway import BlitzGateway
 from omero import ValidationException
-from omero.rtypes import wrap, rstring, rlong
+from omero.rtypes import rstring, rlong
 from omero.model import ExperimenterI, ImageAnnotationLinkI, ImageI, \
     TagAnnotationI, LongAnnotationI
 
 RATING_NS = "openmicroscopy.org/omero/insight/rating"
 
+
 def link_tags(conn, datasetname, image_tag_links, image_ratings):
 
-    for i in range(1, 41):
+    for i in range(1, 51):
         username = "user-%s" % i
-        print username
+        print(username)
         exp = conn.getAdminService().lookupExperimenter(username)
         exp_id = exp.id.val
-        
-        dataset = conn.getObject("Dataset",
-                attributes={'name': datasetname},
-                opts={'owner': exp_id})
+
+        dataset = conn.getObject("Dataset", attributes={'name': datasetname},
+                                 opts={'owner': exp_id})
         if dataset is None:
-            print "Dataset not found"
+            print("Dataset not found")
             continue
         links = []
         for image in dataset.listChildren():
@@ -73,13 +72,13 @@ def link_tags(conn, datasetname, image_tag_links, image_ratings):
                 link.details.owner = ExperimenterI(exp_id, False)
                 links.append(link)
 
-        print 'links', len(links)
+        print('links', len(links))
         group_id = dataset.getDetails().getGroup().id
         conn.SERVICE_OPTS.setOmeroGroup(group_id)
         try:
             conn.getUpdateService().saveArray(links, conn.SERVICE_OPTS)
         except ValidationException:
-            print "Failed to link for %s" % username
+            print("Failed to link for %s" % username)
 
 
 def run(datasetname, password, host, port):
@@ -89,8 +88,8 @@ def run(datasetname, password, host, port):
 
     try:
         trainer_dataset = conn.getObject("Dataset",
-                attributes={'name': datasetname},
-                opts={'owner': conn.getUserId()})
+                                         attributes={'name': datasetname},
+                                         opts={'owner': conn.getUserId()})
 
         # Create {name: [tag_id, tag_id]} for images in Dataset
         image_tag_links = {}
@@ -106,9 +105,8 @@ def run(datasetname, password, host, port):
                 image_tag_links[image.getName()] = tag_ids
 
         # print image_tag_links
-        print 'image_ratings', image_ratings
+        print('image_ratings', image_ratings)
         link_tags(conn, datasetname, image_tag_links, image_ratings)
-    
     finally:
         conn.close()
 

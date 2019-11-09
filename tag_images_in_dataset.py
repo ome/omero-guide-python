@@ -42,10 +42,10 @@ images_to_tag = ["A1.pattern1.tif",
 
 def run(password, admin_name, target, tag, host, port):
 
-    for i in range(1, 41):
+    for i in range(1, 51):
 
         username = "user-%s" % i
-        print username
+        print(username)
         conn = BlitzGateway(username, password, host=host, port=port)
         try:
             conn.connect()
@@ -53,7 +53,7 @@ def run(password, admin_name, target, tag, host, port):
             ds = conn.getObject("Dataset", attributes={'name': target},
                                 opts={'owner': conn.getUserId()})
             if ds is None:
-                print "No dataset with name %s found" % target
+                print("No dataset with name %s found" % target)
                 continue
             params = omero.sys.ParametersI()
             params.addString('username', admin_name)
@@ -63,10 +63,10 @@ def run(password, admin_name, target, tag, host, port):
             tags = query_service.findAllByQuery(query, params,
                                                 conn.SERVICE_OPTS)
             if len(tags) == 0:
-                print "No tag with name %s found" % tag
+                print("No tag with name %s found" % tag)
                 continue
             tag_id = tags[0].id.getValue()
-            print tag_id
+            print(tag_id)
             links = []
             for image in ds.listChildren():
                 name = image.getName()
@@ -86,11 +86,11 @@ def run(password, admin_name, target, tag, host, port):
                         link.child = TagAnnotationI(tag_id, False)
                         links.append(link)
                     else:
-                        print "Tag %s already linked to %s" % (tag, name)
+                        print("Tag %s already linked to %s" % (tag, name))
             if len(links) > 0:
                 updateService.saveArray(links)
         except Exception as exc:
-            print "Error when tagging the images: %s" % str(exc)
+            print("Error when tagging the images: %s" % str(exc))
         finally:
             conn.close()
 

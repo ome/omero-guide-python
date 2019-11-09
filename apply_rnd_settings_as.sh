@@ -15,7 +15,7 @@ FILE=${FILE:-renderingMapping.tsv}
 OMEROPATH=${OMEROPATH:-/opt/omero/server/OMERO.server/bin/omero}
 PASSWORD=${PASSWORD:-ome}
 HOST=${HOST:-outreach.openmicroscopy.org}
-NUMBER=${NUMBER:-40}
+NUMBER=${NUMBER:-50}
 OMEUSER=${OMEUSER:-user}
 SUDOER=${SUDOER:-importer1}
 

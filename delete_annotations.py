@@ -30,7 +30,6 @@
 
 import argparse
 from omero.gateway import BlitzGateway
-from omero.rtypes import rstring
 import omero
 
 
@@ -42,7 +41,7 @@ def run(name, password, dataset_name, anntype, ns, host, port):
         datasets = conn.getObjects("Dataset",
                                    attributes={"name": dataset_name})
         for dataset in datasets:
-            print dataset.getId()
+            print(dataset.getId())
             ann_ids = []
             given_type = None
             if anntype == "map":
@@ -54,18 +53,18 @@ def run(name, password, dataset_name, anntype, ns, host, port):
             for image in dataset.listChildren():
                 for a in image.listAnnotations(ns):
                     if a.OMERO_TYPE == given_type:
-                        print a.getId(), a.OMERO_TYPE, a.ns
+                        print(a.getId(), a.OMERO_TYPE, a.ns)
                         ann_ids.append(a.id)
             # Delete the annotations link to the dataset
             for a in dataset.listAnnotations(ns):
                 if a.OMERO_TYPE == given_type:
-                    print a.getId(), a.OMERO_TYPE, a.ns
+                    print(a.getId(), a.OMERO_TYPE, a.ns)
                     ann_ids.append(a.id)
             if len(ann_ids) > 0:
-                print "Deleting %s annotations..." % len(ann_ids)
+                print("Deleting %s annotations..." % len(ann_ids))
                 conn.deleteObjects('Annotation', ann_ids, wait=True)
     except Exception as exc:
-            print "Error while deleting annotations: %s" % str(exc)
+        print("Error while deleting annotations: %s" % str(exc))
     finally:
         conn.close()
 

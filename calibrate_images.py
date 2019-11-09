@@ -22,7 +22,7 @@
 """
 This script changes the calibration on all images contained in a Dataset
 with a specified name belonging to users user-1 through
-user-40.
+user-50.
 Each calibration change is made by the owner of the Dataset and the images
 themselves.
 """
@@ -35,10 +35,10 @@ from omero.model.enums import UnitsLength
 
 def run(password, target, host, port):
 
-    for i in range(1, 41):
+    for i in range(1, 51):
 
         username = "user-%s" % i
-        print username
+        print(username)
         conn = BlitzGateway(username, password, host=host, port=port)
         try:
             conn.connect()
@@ -51,13 +51,13 @@ def run(password, target, host, port):
             dataset = service.findAllByQuery(query, params, conn.SERVICE_OPTS)
 
             if len(dataset) == 0:
-                print "No dataset with name %s found" % target
+                print("No dataset with name %s found" % target)
                 continue
 
             dataset_obj = dataset[0]
             datasetId = dataset[0].getId().getValue()
 
-            print 'dataset', datasetId
+            print('dataset', datasetId)
             params2 = omero.sys.ParametersI()
             params2.addId(dataset_obj.getId())
             query = "select l.child.id from DatasetImageLink \
@@ -78,7 +78,7 @@ def run(password, target, host, port):
             if len(images) > 0:
                 conn.getUpdateService().saveArray(values)
         except Exception as exc:
-            print "Error during calibration: %s" % str(exc)
+            print("Error during calibration: %s" % str(exc))
         finally:
             conn.close()
 

@@ -44,7 +44,7 @@ def run(password, project_name, dataset_names, host, port):
 
     for user_number in range(1, 51):
         username = "user-%s" % user_number
-        print username
+        print(username)
         conn = BlitzGateway(username, password, host=host, port=port)
         try:
             conn.connect()
@@ -53,7 +53,7 @@ def run(password, project_name, dataset_names, host, port):
             update_service = conn.getUpdateService()
             project = update_service.saveAndReturnObject(project)
         except Exception as exc:
-            print "Error while creating project: %s" % str(exc)
+            print("Error while creating project: %s" % str(exc))
             conn.close()
             continue
 
@@ -64,23 +64,25 @@ def run(password, project_name, dataset_names, host, port):
                 # make sure only one result is returned by query
                 params.page(0, 1)
                 query = "from Dataset where name='%s' \
-                         AND details.owner.omeName=:username ORDER BY id DESC" % dataset_name
+                         AND details.owner.omeName=:username \
+                         ORDER BY id DESC" % dataset_name
                 service = conn.getQueryService()
-                ds_list = service.findAllByQuery(query, params, conn.SERVICE_OPTS)
+                ds_list = service.findAllByQuery(query, params,
+                                                 conn.SERVICE_OPTS)
 
                 if ds_list is None:
-                    print "No dataset with name %s found" % dataset_name
+                    print("No dataset with name %s found" % dataset_name)
                     continue
 
                 dataset_id = ds_list[0].getId().getValue()
-                print username, dataset_id
+                print(username, dataset_id)
 
                 link = ProjectDatasetLinkI()
                 link.setParent(ProjectI(project.getId().getValue(), False))
                 link.setChild(DatasetI(dataset_id, False))
                 conn.getUpdateService().saveObject(link)
             except Exception as exc:
-                print "Error while linking dataset to project: %s" % str(exc)
+                print("Error while linking dataset to project: %s" % str(exc))
 
         conn.close()
 

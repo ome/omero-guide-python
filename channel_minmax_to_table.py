@@ -24,7 +24,6 @@ import omero
 from omero.rtypes import rstring
 import omero.grid
 from omero.gateway import BlitzGateway
-from omero.sys import ParametersI
 
 
 NAMESPACE = "openmicroscopy.org/omero/bulk_annotations"
@@ -53,7 +52,7 @@ def run(username, password, plate_id, host, port):
             wellIds.append(well.id)
             chCount = image.getSizeC()
             row = []
-            print "well, image", well.id, image.id
+            print("well, image", well.id, image.id)
 
             params = omero.sys.ParametersI()
             params.addId(image.getPixelsId())
@@ -69,8 +68,8 @@ def run(username, password, plate_id, host, port):
                     row.extend([si.globalMin.val, si.globalMax.val])
             rowData.append(row)
 
-        print 'wellIds', wellIds
-        print 'rowData', rowData
+        print('wellIds', wellIds)
+        print('rowData', rowData)
 
         # Now we know how many channels, we can make the table
         col1 = omero.grid.WellColumn('Well', '', [])
@@ -89,15 +88,15 @@ def run(username, password, plate_id, host, port):
         data = [data1]
         for colIdx in range(len(rowData[0])):
             colData = [r[colIdx] for r in rowData]
-            print "colData", len(colData)
+            print("colData", len(colData))
             name = colNames[colIdx]
             data.append(omero.grid.LongColumn(name, '', colData))
 
-        print "Adding data: ", len(data)
+        print("Adding data: ", len(data))
         table.addData(data)
         table.close()
 
-        print "table closed..."
+        print("table closed...")
         orig_file = table.getOriginalFile()
         fileAnn = omero.model.FileAnnotationI()
         fileAnn.ns = rstring(NAMESPACE)
@@ -107,11 +106,11 @@ def run(username, password, plate_id, host, port):
         link.setParent(omero.model.PlateI(plate_id, False))
         link.setChild(omero.model.FileAnnotationI(fileAnn.id.val, False))
 
-        print "save link..."
+        print("save link...")
         conn.getUpdateService().saveAndReturnObject(link)
 
     except Exception as exc:
-            print "Error while changing names: %s" % str(exc)
+        print("Error while changing names: %s" % str(exc))
     finally:
         conn.close()
 

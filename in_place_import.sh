@@ -25,7 +25,7 @@ OMEROPATH=${OMEROPATH:-/opt/omero/server/OMERO.server/bin/omero}
 PASSWORD=${PASSWORD:-ome}
 HOST=${HOST:-outreach.openmicroscopy.org}
 FOLDER=${FOLDER:-siRNAi-HeLa}
-NUMBER=${NUMBER:-40}
+NUMBER=${NUMBER:-50}
 OMEUSER=${OMEUSER:-user}
 DATATYPE=${DATATYPE:-dataset}
 for ((i=1;i<=$NUMBER;i++));

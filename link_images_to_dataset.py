@@ -22,7 +22,7 @@
 
 """
 This script creates a new dataset and links all images with a given name
-to it for users user-1 through user-40.
+to it for users user-1 through user-50.
 """
 
 import argparse
@@ -32,9 +32,9 @@ from omero.gateway import BlitzGateway
 
 def run(password, dataset_name, target, host, port):
 
-    for i in range(1, 41):
+    for i in range(1, 51):
         username = "user-%s" % i
-        print username
+        print(username)
         conn = BlitzGateway(username, password, host=host, port=port)
         try:
             conn.connect()
@@ -48,24 +48,24 @@ def run(password, dataset_name, target, host, port):
                                                   conn.SERVICE_OPTS)
 
             if len(images) == 0:
-                print "No images with name %s found" % target
+                print("No images with name %s found" % target)
                 continue
             image_id = images[0].getId().getValue()
 
-            print 'id', image_id
+            print('id', image_id)
 
             dataset = omero.model.DatasetI()
             dataset.setName(omero.rtypes.rstring(dataset_name))
             dataset = conn.getUpdateService().saveAndReturnObject(dataset)
             dataset_id = dataset.getId().getValue()
-            print username, dataset_id
+            print(username, dataset_id)
 
             link = omero.model.DatasetImageLinkI()
             link.setParent(dataset)
             link.setChild(omero.model.ImageI(image_id, False))
             conn.getUpdateService().saveObject(link)
         except Exception as exc:
-            print "Error while linking images: %s" % str(exc)
+            print("Error while linking images: %s" % str(exc))
         finally:
             conn.close()
 
