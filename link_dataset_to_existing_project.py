@@ -29,14 +29,13 @@ from omero.gateway import BlitzGateway
 from omero.model import DatasetI
 from omero.model import ProjectDatasetLinkI
 from omero.model import ProjectI
-from omero.rtypes import rstring
 
 
 def run(password, project_name, dataset_name, host, port):
 
     for user_number in range(1, 51):
         username = "user-%s" % user_number
-        print username
+        print(username)
         conn = BlitzGateway(username, password, host=host, port=port)
         try:
             conn.connect()
@@ -46,41 +45,41 @@ def run(password, project_name, dataset_name, host, port):
             # make sure only one result is returned by query
             params.page(0, 1)
             query = "from Project where name='%s' \
-                     AND details.owner.omeName=:username ORDER BY id DESC" % project_name
+                    AND details.owner.omeName=:username \
+                    ORDER BY id DESC" % project_name
             service = conn.getQueryService()
             pr_list = service.findAllByQuery(query, params, conn.SERVICE_OPTS)
 
             if pr_list is None:
-                print "No project with name %s found" % project_name
+                print("No project with name %s found" % project_name)
                 continue
 
-
             project_id = pr_list[0].getId().getValue()
-            print username, project_id
+            print(username, project_id)
 
             params = omero.sys.ParametersI()
             params.addString('username', username)
             # make sure only one result is returned by query
             params.page(0, 1)
             query = "from Dataset where name='%s' \
-                     AND details.owner.omeName=:username ORDER BY id DESC" % dataset_name
+                     AND details.owner.omeName=:username \
+                     ORDER BY id DESC" % dataset_name
             service = conn.getQueryService()
             ds_list = service.findAllByQuery(query, params, conn.SERVICE_OPTS)
 
             if ds_list is None:
-                print "No dataset with name %s found" % dataset_name
+                print("No dataset with name %s found" % dataset_name)
                 continue
 
-
             dataset_id = ds_list[0].getId().getValue()
-            print username, dataset_id
+            print(username, dataset_id)
 
             link = ProjectDatasetLinkI()
             link.setParent(ProjectI(project_id, False))
             link.setChild(DatasetI(dataset_id, False))
             conn.getUpdateService().saveObject(link)
         except Exception as exc:
-            print "Error while linking to project: %s" % str(exc)
+            print("Error while linking to project: %s" % str(exc))
         finally:
             conn.close()
 
