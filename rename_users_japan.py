@@ -42,7 +42,6 @@ Charles Darwin. Yoshinori is now number 2 and is written in japanese signs.
 """
 
 import argparse
-import omero
 from omero.rtypes import rstring
 from omero.gateway import BlitzGateway
 
@@ -50,61 +49,60 @@ from omero.gateway import BlitzGateway
 def run(username, password, host, port):
 
     full_names = ["勝子 猿橋",
-              "良典 大隅",
-              "チカ 黒田",
-              "伸弥 山中",
-              "コノ 保井",
-              "陽一郎 南部",
-              "年子 湯浅",
-              "富美子 米沢",
-              "照子 石坂",
-              "恒子 岡崎",
-              "Louis Pasteur",
-              "Ada Lovelace",
-              "Linus Pauling",
-              "Frances Kelsey",
-              "Maurice Wilkins",
-              "Florence Nightingale",
-              "John Sulston",
-              "Elizabeth Blackwell",
-              "Richard Dawkins",
-              "Caroline Dean",
-              "Stephen Reicher",
-              "Wendy Barclay",
-              "Paul Nurse",
-              "Jennifer Doudna",
-              "Adrian Thomas",
-              "Ann Clarke",
-              "Oswald Avery",
-              "Liz Sockett",
-              "Erwin Chargaff",
-              "Tracey Rogers",
-              "Ronald Fisher",
-              "Rachel Carson",
-              "William Harvey",
-              "Nettie Stevens",
-              "Jeffrey Hall",
-              "Youyou Tu",
-              "Michael Rosbash",
-              "Carol Greider",
-              "Charles Darwin",
-              "Rosalyn Yalow"]
+                  "良典 大隅",
+                  "チカ 黒田",
+                  "伸弥 山中",
+                  "コノ 保井",
+                  "陽一郎 南部",
+                  "年子 湯浅",
+                  "富美子 米沢",
+                  "照子 石坂",
+                  "恒子 岡崎",
+                  "Louis Pasteur",
+                  "Ada Lovelace",
+                  "Linus Pauling",
+                  "Frances Kelsey",
+                  "Maurice Wilkins",
+                  "Florence Nightingale",
+                  "John Sulston",
+                  "Elizabeth Blackwell",
+                  "Richard Dawkins",
+                  "Caroline Dean",
+                  "Stephen Reicher",
+                  "Wendy Barclay",
+                  "Paul Nurse",
+                  "Jennifer Doudna",
+                  "Adrian Thomas",
+                  "Ann Clarke",
+                  "Oswald Avery",
+                  "Liz Sockett",
+                  "Erwin Chargaff",
+                  "Tracey Rogers",
+                  "Ronald Fisher",
+                  "Rachel Carson",
+                  "William Harvey",
+                  "Nettie Stevens",
+                  "Jeffrey Hall",
+                  "Youyou Tu",
+                  "Michael Rosbash",
+                  "Carol Greider",
+                  "Charles Darwin",
+                  "Rosalyn Yalow"]
 
     conn = BlitzGateway(username, password, host=host, port=port)
     try:
         conn.connect()
         admin_service = conn.getAdminService()
         for i, full_name in enumerate(full_names):
-          username = 'oki-admin'
-          print username, full_name
-          exp = admin_service.lookupExperimenter(username)
-          names = full_name.split(" ")
-          exp.firstName = rstring(names[0])
-          exp.lastName = rstring(names[1]
-          admin_service.updateExperimenter(exp)
-
+            username = 'oki-admin'
+            print(username, full_name)
+            exp = admin_service.lookupExperimenter(username)
+            names = full_name.split(" ")
+            exp.firstName = rstring(names[0])
+            exp.lastName = rstring(names[1])
+            admin_service.updateExperimenter(exp)
     except Exception as exc:
-            print "Error while renaming users: %s" % str(exc)
+        print("Error while renaming users: %s" % str(exc))
     finally:
         conn.close()
 
