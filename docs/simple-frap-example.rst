@@ -42,7 +42,8 @@ access data in OMERO.
     ::
 
         from omero.gateway import BlitzGateway
-        conn = BlitzGateway(raw_input("Username: "), getpass("OMERO Password:"), host="outreach.openmicroscopy.org", port=4064)
+        from getpass import getpass
+        conn = BlitzGateway(input("Username: "), getpass("OMERO Password:"), host="workshop.openmicroscopy.org", port=4064)
         conn.connect()
 
 #.  Go to webclient, browse your data and find the **FRAP** images.
@@ -83,7 +84,7 @@ access data in OMERO.
                     y = s.getY().getValue()
                     width = s.getWidth().getValue()
                     height = s.getHeight().getValue()
-        print "Rectangle:", x, y, width, height
+        print("Rectangle:", x, y, width, height)
 
 #.  With the Rectangle x, y, width, height, we can get pixel data for
     this Tile across all time points and make a list of mean
@@ -101,7 +102,7 @@ access data in OMERO.
         meanvalues = []
         for i, p in enumerate(planes):
             meanvalues.append(p.mean())
-        print meanvalues
+        print(meanvalues)
 
 #.  We can add these values as a Map Annotation (Key-Value pairs) on the image:
 
@@ -123,8 +124,8 @@ access data in OMERO.
 
         from PIL import Image
         import matplotlib
-        matplotlib.use('Agg')
         from matplotlib import pyplot as plt
+        matplotlib.use('Agg')
         fig = plt.figure()
         plt.subplot(111)
         plt.plot(meanvalues)
@@ -166,7 +167,7 @@ access data in OMERO.
 #.  Run the script on the image. Note in *Activities*, the ID of the
     newly created figure.
 
-#.  Open OMERO.figure, and go to *File > Open…* to open the newly
+#.  Open OMERO.figure, and go to *File > Open...* to open the newly
     created figure (named **FRAP Figure from script**).
 
     |image1|
