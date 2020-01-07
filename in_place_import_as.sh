@@ -30,7 +30,8 @@
 
 echo Starting
 SUDOER=${SUDOER:-importer1}
-OMEROPATH=${OMEROPATH:-/opt/omero/server/OMERO.server/bin/omero}
+OMERODIR=${OMERODIR:-/opt/omero/server/OMERO.server}
+VENV_SERVER=${VENV_SERVER:-/opt/omero/server/venv3}
 PASSWORD=${PASSWORD:-ome}
 HOST=${HOST:-workshop.openmicroscopy.org}
 FOLDER=${FOLDER:-siRNAi-HeLa}
@@ -40,8 +41,12 @@ DATATYPE=${DATATYPE:-dataset}
 IMPORTTYPE=${IMPORTTYPE:-bulk}
 BULKFILE=${BULKFILE:-idr0021-scripts/idr0021-experimentA-bulk.yml}
 PROJECTNAME=${PROJECTNAME:-idr0021}
+
+export $OMERODIR
+export PATH=$VENV_SERVER/bin:$PATH
+
 for ((i=1;i<=$NUMBER;i++));
-do  $OMEROPATH login --sudo ${SUDOER} -u $OMEUSER-$i -s $HOST -w $PASSWORD
+do  omero login --sudo ${SUDOER} -u $OMEUSER-$i -s $HOST -w $PASSWORD
     if [ "$DATATYPE" = "dataset" ]; then
         if [ "$IMPORTTYPE" = "normal" ]; then
             DatasetId=$($OMEROPATH obj new Dataset name=$FOLDER)
@@ -66,7 +71,11 @@ do  $OMEROPATH login --sudo ${SUDOER} -u $OMEUSER-$i -s $HOST -w $PASSWORD
         fi
     elif [ "$DATATYPE" = "plate" ]; then
         $OMEROPATH import --transfer=ln_s $FOLDER
+        DatasetId=$(omero obj new Dataset name=$FOLDER)
+        omero import -d $DatasetId --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
+    elif [ "$DATATYPE" = "plate" ]; then
+        omero import --transfer=ln_s "/OMERO/in-place-import/$FOLDER"
     fi
-    $OMEROPATH logout
+    omero logout
 done
 echo Finishing

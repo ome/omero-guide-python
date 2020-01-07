@@ -25,11 +25,15 @@
 
 echo Starting
 SUDOER=${SUDOER:-root}
-OMEROPATH=${OMEROPATH:-/opt/omero/server/OMERO.server/bin/omero}
+OMERODIR=${OMERODIR:-/opt/omero/server/OMERO.server}
+VENV_SERVER=${VENV_SERVER:-/opt/omero/server/venv3}
 PASSWORD=${PASSWORD:-omero}
 HOST=${HOST:-workshop.openmicroscopy.org}
 SETUP=${SETUP:-create_groups_users_setup}
 
-$OMEROPATH login  -u ${SUDOER} -s $HOST -w $PASSWORD
-$OMEROPATH load ${SETUP}
+export $OMERODIR
+export PATH=$VENV_SERVER/bin:$PATH
+
+omero login  -u ${SUDOER} -s $HOST -w $PASSWORD
+omero load ${SETUP}
 echo Finishing
