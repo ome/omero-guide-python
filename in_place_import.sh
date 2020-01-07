@@ -23,7 +23,7 @@
 echo Starting
 OMEROPATH=${OMEROPATH:-/opt/omero/server/OMERO.server/bin/omero}
 PASSWORD=${PASSWORD:-ome}
-HOST=${HOST:-outreach.openmicroscopy.org}
+HOST=${HOST:-workshop.openmicroscopy.org}
 FOLDER=${FOLDER:-siRNAi-HeLa}
 NUMBER=${NUMBER:-50}
 OMEUSER=${OMEUSER:-user}

@@ -27,7 +27,7 @@ echo Starting
 SUDOER=${SUDOER:-root}
 OMEROPATH=${OMEROPATH:-/opt/omero/server/OMERO.server/bin/omero}
 PASSWORD=${PASSWORD:-omero}
-HOST=${HOST:-outreach.openmicroscopy.org}
+HOST=${HOST:-workshop.openmicroscopy.org}
 SETUP=${SETUP:-create_groups_users_setup}
 
 $OMEROPATH login  -u ${SUDOER} -s $HOST -w $PASSWORD

@@ -102,7 +102,7 @@ def main(args):
     parser.add_argument('tag')
     parser.add_argument('--name', default="trainer-1",
                         help="The owner of the tag")
-    parser.add_argument('--server', default="outreach.openmicroscopy.org",
+    parser.add_argument('--server', default="workshop.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)

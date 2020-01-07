@@ -130,7 +130,7 @@ def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('password')
     parser.add_argument('target')
-    parser.add_argument('--server', default="outreach.openmicroscopy.org",
+    parser.add_argument('--server', default="workshop.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
