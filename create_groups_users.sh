@@ -31,7 +31,7 @@ PASSWORD=${PASSWORD:-omero}
 HOST=${HOST:-workshop.openmicroscopy.org}
 SETUP=${SETUP:-create_groups_users_setup}
 
-export $OMERODIR
+export OMERODIR
 export PATH=$VENV_SERVER/bin:$PATH
 
 omero login  -u ${SUDOER} -s $HOST -w $PASSWORD

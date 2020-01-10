@@ -38,7 +38,7 @@ NUMBER=${NUMBER:-50}
 OMEUSER=${OMEUSER:-user}
 SUDOER=${SUDOER:-importer1}
 
-export $OMERODIR
+export OMERODIR
 export PATH=$VENV_SERVER/bin:$PATH
 
 for ((i=1;i<=$NUMBER;i++));
