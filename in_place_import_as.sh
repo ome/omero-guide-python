@@ -42,7 +42,7 @@ IMPORTTYPE=${IMPORTTYPE:-bulk}
 BULKFILE=${BULKFILE:-idr0021-scripts/idr0021-experimentA-bulk.yml}
 PROJECTNAME=${PROJECTNAME:-idr0021}
 
-export $OMERODIR
+export OMERODIR
 export PATH=$VENV_SERVER/bin:$PATH
 
 for ((i=1;i<=$NUMBER;i++));
