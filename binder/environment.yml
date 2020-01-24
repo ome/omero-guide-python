@@ -3,6 +3,12 @@ channels:
   - ome
   - ilastik-forge
 dependencies:
+  - matplotlib
+  - scikit-image
+  - scipy
+  - pip
+  # ome: minimal dependencies required to use the Python API
   - zeroc-ice36-python
   - omero-py
-  - pip
+
+
