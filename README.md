@@ -2,7 +2,7 @@
 
 This guide demonstrates how to use the OMERO Python API.
 
-To run the notebooks, you can either [run on mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-cellprofiler/master?filepath=notebooks) or build locally with [repo2docker](https://repo2docker.readthedocs.io/).
+To run the notebooks, you can either [run on mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks) or build locally with [repo2docker](https://repo2docker.readthedocs.io/).
 
 To build locally:
 
@@ -12,8 +12,8 @@ To build locally:
 
 ```
 pip install jupyter-repo2docker
-git clone https://github.com/ome/omero-guide-cellprofiler.git
-cd omero-guide-cellprofiler
+git clone https://github.com/ome/omero-guide-python.git
+cd omero-guide-python
 repo2docker .
 ```
 
