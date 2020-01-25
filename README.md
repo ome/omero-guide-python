@@ -8,7 +8,7 @@ To build locally:
 
  * Create a virtual environment and install repo2docker from PyPI.
  * Clone this repository
- * Run  ``repo2docker``
+ * Run ``repo2docker``
 
 ```
 pip install jupyter-repo2docker
