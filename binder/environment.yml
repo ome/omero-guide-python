@@ -1,7 +1,6 @@
 channels:
   - conda-forge
   - ome
-  - ilastik-forge
 dependencies:
   - matplotlib
   - scikit-image
