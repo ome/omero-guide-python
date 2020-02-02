@@ -6,9 +6,12 @@ To run the notebooks, you can either [run on mybinder.org](https://mybinder.org/
 
 To build locally:
 
+ * Install [Docker][https://www.docker.com/] if required
  * Create a virtual environment and install repo2docker from PyPI.
  * Clone this repository
- * Run ``repo2docker``
+ * Run  ``repo2docker``. 
+ * Depending on the permissions, you might have to run the command as an admin
+
 
 ```
 pip install jupyter-repo2docker
