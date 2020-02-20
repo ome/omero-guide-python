@@ -1,5 +1,5 @@
-**OMERO.py scripting - Simple FRAP**
-====================================
+OMERO.py scripting - Simple FRAP
+================================
 
 **Description:**
 ----------------
