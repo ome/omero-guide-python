@@ -24,7 +24,7 @@ Conda manages programming environments in a manner similar to
 
 - Create a programming environment using Conda::
 
-    $ conda create -n omeropy python=2.7
+    $ conda create -n omeropy python=3.6
 
 - Install ``omero-py`` and other packages useful for demonstration purposes in order to connect to an OMERO server using an installation file::
 
