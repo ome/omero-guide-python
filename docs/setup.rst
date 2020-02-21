@@ -8,7 +8,7 @@ We will use the Python API to access data stored in an OMERO server.
 **Setup**
 ---------
 
-We recommand to install omero-py using Conda.
+We recommend to install omero-py using Conda.
 Conda manages programming environments in a manner similar to 
 `virtualenv <https://virtualenv.pypa.io/en/stable/>`_.
 
