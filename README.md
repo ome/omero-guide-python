@@ -6,7 +6,7 @@ To run the notebooks, you can either [run on mybinder.org](https://mybinder.org/
 
 To build locally:
 
- * Install [Docker][https://www.docker.com/] if required
+ * Install [Docker](https://www.docker.com/) if required
  * Create a virtual environment and install repo2docker from PyPI.
  * Clone this repository
  * Run  ``repo2docker``. 
@@ -21,6 +21,6 @@ repo2docker .
 ```
 
 
-This a Sphinx based documentation. 
+This is a Sphinx based documentation. 
 If you are unfamiliar with Sphinx, we recommend that you first read 
 [Getting Started with Sphinx](https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html).
