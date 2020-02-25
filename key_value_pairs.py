@@ -58,68 +58,32 @@ def run(password, target, host, port):
             print('dataset', dataset_id)
             dataset = conn.getObject("Dataset", dataset_id)
 
-            kvp_set1 = [["mitomycin-A", "0mM"], ["PBS", "10mM"],
-                        ["incubation", "10min"], ["temperature", "37"],
-                        ["Organism", "Homo sapiens"]]
-            kvp_set2 = [["mitomycin-A", "20mM"], ["PBS", "10mM"],
-                        ["incubation", "10min"], ["temperature", "37"],
-                        ["Organism", "Homo sapiens"]]
-            kvp_set3 = [["mitomycin-A", "10microM"], ["PBS", "10mM"],
-                        ["incubation", "5min"], ["temperature", "37"],
-                        ["Organism", "Homo sapiens"]]
-            kvp_set4 = [["mitomycin-A", "0mM"], ["PBS", "10mM"],
-                        ["incubation", "5min"], ["temperature", "68"],
-                        ["Organism", "Homo sapiens"]]
+            kvp_sets = [
+                [["mitomycin-A", "0mM"], ["PBS", "10mM"],
+                 ["incubation (mins)", "20"], ["temperature", "37"],
+                 ["Organism", "Homo sapiens"]],
+                [["mitomycin-A", "20mM"], ["PBS", "10mM"],
+                 ["incubation (mins)", "10"], ["temperature", "40"],
+                 ["Organism", "Homo sapiens"]],
+                [["mitomycin-A", "10microM"], ["PBS", "10mM"],
+                 ["incubation (mins)", "5"], ["temperature", "37"],
+                 ["Organism", "Homo sapiens"]],
+                [["mitomycin-A", "0mM"], ["PBS", "10mM"],
+                 ["incubation (mins)", "2"], ["temperature", "68"],
+                 ["Organism", "Homo sapiens"]],
+            ]
 
-            images_kvp_order = [('A10.pattern1.tif', kvp_set1),
-                                ('A10.pattern2.tif', kvp_set2),
-                                ('A10.pattern5.tif', kvp_set2),
-                                ('A1.pattern1.tif', kvp_set4),
-                                ('A1.pattern2.tif', kvp_set1),
-                                ('A5.pattern1.tif', kvp_set3),
-                                ('A5.pattern2.tif', kvp_set2),
-                                ('A5.pattern3.tif', kvp_set2),
-                                ('A5.pattern4.tif', kvp_set2),
-                                ('A6.pattern1.tif', kvp_set3),
-                                ('A6.pattern2.tif', kvp_set2),
-                                ('A6.pattern3.tif', kvp_set2),
-                                ('B12.pattern1.tif', kvp_set1),
-                                ('B12.pattern2.tif', kvp_set1),
-                                ('B12.pattern3.tif', kvp_set1),
-                                ('B12.pattern4.tif', kvp_set3),
-                                ('B12.pattern5.tif', kvp_set3),
-                                ('C4.pattern1.tif', kvp_set2),
-                                ('C4.pattern2.tif', kvp_set2),
-                                ('C4.pattern3.tif', kvp_set2),
-                                ('C4.pattern4.tif', kvp_set2),
-                                ('C4.pattern5.tif', kvp_set2),
-                                ('C4.pattern6.tif', kvp_set2),
-                                ('C4.pattern7.tif', kvp_set3),
-                                ('C4.pattern8.tif', kvp_set3),
-                                ('C4.pattern9.tif', kvp_set1),
-                                ('C4.pattern.tif', kvp_set1),
-                                ('E4.pattern5.tif', kvp_set3),
-                                ('E4.pattern6.tif', kvp_set1),
-                                ('E4.pattern7.tif', kvp_set3),
-                                ('E4.pattern8.tif', kvp_set3),
-                                ('E4.pattern9.tif', kvp_set1)]
-
-            images_kvp_order = dict(images_kvp_order)
-            for image in dataset.listChildren():
-
-                if image.getName() in images_kvp_order:
-                    print(images_kvp_order[image.getName()])
-
-                    key_value_data = images_kvp_order[image.getName()]
-                    map_ann = omero.gateway.MapAnnotationWrapper(conn)
-                    # Use 'client' namespace to allow editing in Insight & web
-                    namespace = omero.constants.metadata.NSCLIENTMAPANNOTATION
-                    map_ann.setNs(namespace)
-                    map_ann.setValue(key_value_data)
-                    map_ann.save()
-                    # NB: only link a client map annotation to a single object
-                    image.linkAnnotation(map_ann)
-                    print('linking to image', image.getName())
+            for count, image in enumerate(dataset.listChildren()):
+                key_value_data = kvp_sets[count % 4]
+                map_ann = omero.gateway.MapAnnotationWrapper(conn)
+                # Use 'client' namespace to allow editing in Insight & web
+                namespace = omero.constants.metadata.NSCLIENTMAPANNOTATION
+                map_ann.setNs(namespace)
+                map_ann.setValue(key_value_data)
+                map_ann.save()
+                # NB: only link a client map annotation to a single object
+                image.linkAnnotation(map_ann)
+                print('linking to image', image.getName())
         except Exception as exc:
             print("Error while setting key-value pairs: %s" % str(exc))
         finally:
