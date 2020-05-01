@@ -14,6 +14,7 @@ Follow the instructions in the
    :maxdepth: 1
 
    setup
+   gettingstarted
    simple-frap-example
 
 **Contribute**
