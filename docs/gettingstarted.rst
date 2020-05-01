@@ -14,7 +14,7 @@ We will show:
 
 - Run a simple FRAP analysis measuring the intensity within a pre-existing ellipse ROI in a named Channel.
 
-- How to save the generated mean intensities and linked them to the image(s).
+- How to save the generated mean intensities and link them to the image(s).
 
 **Setup**
 ---------
