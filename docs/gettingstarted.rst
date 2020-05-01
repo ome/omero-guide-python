@@ -25,7 +25,7 @@ We recommend to use a Conda environment to install the OMERO Python bindings. Pl
 **Step-by-Step**
 ----------------
 
-In this section, we go over the various steps required to analyse the data.
+In this section, we go through the steps required to analyse the data.
 The script used in this document is :download:`simple_frap.py <../scripts/simple_frap.py>`.
 
 Connect to the server:
