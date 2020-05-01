@@ -12,7 +12,7 @@ We will show:
 
 - How load images from a dataset.
 
-- Run a simple FRAP analysis measuring the intensity in a named Channel within an existing ellipse.
+- Run a simple FRAP analysis measuring the intensity within a pre-existing ellipse ROI in a named Channel.
 
 - How to save the generated mean intensities and linked them to the image(s).
 
