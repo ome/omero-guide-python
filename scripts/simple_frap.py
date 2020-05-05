@@ -23,7 +23,7 @@ def load_images(conn, dataset_id):
     return images
 
 
-# Analyse-images
+# Analyze-images
 def analyze(conn, images, channel_label):
     svc = conn.getRoiService()
     for image in images:
