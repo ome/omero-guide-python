@@ -12,6 +12,11 @@ cache: pip
 env:
   - SPHINXOPTS="-W"
 
+install:
+  - pip install --upgrade jupyter-repo2docker
+  - pip install --upgrade sphinx
+
 script:
+  - repo2docker --no-run .
   - cd docs
   - make clean html linkcheck
