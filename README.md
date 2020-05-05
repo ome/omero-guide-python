@@ -20,6 +20,8 @@ cd omero-guide-python
 repo2docker .
 ```
 
+See also :download:`setup.rst <https://github.com/ome/omero-guide-python/blob/master/docs/setup.rst>`
+
 
 This is a Sphinx based documentation. 
 If you are unfamiliar with Sphinx, we recommend that you first read 
