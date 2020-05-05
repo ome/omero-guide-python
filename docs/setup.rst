@@ -60,7 +60,7 @@ When the Image is ready:
 
 - A Conda environment has already been created when the Docker Image was built
 
-- To list all the Conda environment, run::
+- To list all the Conda environments, run::
 
     $ conda env list
 
