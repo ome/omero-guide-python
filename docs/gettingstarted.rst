@@ -39,13 +39,13 @@ Load the dataset:
 
 .. literalinclude:: ../scripts/simple_frap.py
     :start-after: # Load-images
-    :end-before: # Analyse-images
+    :end-before: # Analyze-images
 
 
 We are now ready to analyze the images in the dataset:
 
 .. literalinclude:: ../scripts/simple_frap.py
-    :start-after: # Analyse-images
+    :start-after: # Analyze-images
     :end-before: # Get channel
 
 Save the results as map annotation:
