@@ -64,6 +64,6 @@ When the Image is ready:
 
     $ conda env list
 
-- The environment with the OMERO Python bindings and few other libraries is named ``notebook``, activate it::
+- The environment with the OMERO Python bindings and a few other libraries is named ``notebook``, activate it::
 
     $ conda activate notebook
