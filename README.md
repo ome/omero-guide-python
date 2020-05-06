@@ -1,4 +1,5 @@
 # User guides for the OMERO Python API
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks)
 
 This guide demonstrates how to use the OMERO Python API.
 
