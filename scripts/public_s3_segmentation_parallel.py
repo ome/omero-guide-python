@@ -22,7 +22,6 @@
 # Version: 1.0
 #
 
-from dask.diagnostics import ProgressBar
 import dask
 import dask.array as da
 import dask_image.ndfilters
@@ -54,9 +53,7 @@ def load_image(conn, image_id):
 def load_binary_from_s3(id, resolution='4'):
     endpoint_url = 'https://s3.embassy.ebi.ac.uk/'
     root = 'idr/zarr/v0.1/%s.zarr/%s/' % (id, resolution)
-    with ProgressBar():
-        data = da.from_zarr(endpoint_url + root)
-    return data
+    return da.from_zarr(endpoint_url + root)
 
 
 # Segment-image
