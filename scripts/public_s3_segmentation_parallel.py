@@ -45,7 +45,7 @@ def connect(hostname, username, password):
     return conn
 
 
-# Load-Image
+# Load-image
 def load_image(conn, image_id):
     return conn.getObject('Image', image_id)
 
