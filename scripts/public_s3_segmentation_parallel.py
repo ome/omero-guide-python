@@ -74,12 +74,14 @@ def analyze(t, c, z):
 
 # Prepare-call
 def prepare_call(image):
-    number_t = image.getSizeT()  # reduce for demo
-    number_z = image.getSizeZ()
+    middle_z = image.getSizeZ() // 2
+    middle_t = image.getSizeT() // 2
+    range_t = 5
+    range_z = 5
     number_c = image.getSizeC()
     lazy_results = []
-    for t in range(number_t):
-        for z in range(number_z):
+    for t in range(middle_t - range_t, middle_t + range_t):
+        for z in range(middle_z - range_z, middle_z + range_z):
             for c in range(number_c):
                 lazy_result = dask.delayed(analyze)(t, c, z)
                 lazy_results.append(lazy_result)
