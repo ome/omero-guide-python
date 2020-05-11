@@ -116,7 +116,7 @@ def main():
         start = time.time()
         compute(lazy_results)
         elapsed = time.time() - start
-        print('Compute time: %s' % elapsed)
+        print('Compute time (in seconds): %s' % elapsed)
 
     finally:
         disconnect(conn)

@@ -62,7 +62,7 @@ It records what we want to compute as a task into a graph that we will run later
     :start-after: # Prepare-call
     :end-before: # Compute
 
-We are now ready to run in parallel:
+We are now ready to run in parallel using the default number of workers see `Configure dask.compute <https://docs.dask.org/en/latest/scheduler-overview.html#configuring-the-schedulers>`_:
 
 .. literalinclude:: ../scripts/public_s3_segmentation_parallel.py
     :start-after: # Compute
