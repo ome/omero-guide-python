@@ -11,7 +11,7 @@ We will show:
 
 - How to connect to IDR to retrieve the image metadata
 
-- How load the Zarr binary stored in a public repository
+- How to load the Zarr binary stored in a public repository
 
 - How to run a segmentation on each plane in parallel.
 
