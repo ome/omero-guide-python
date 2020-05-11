@@ -39,7 +39,7 @@ data = None
 def connect(hostname, username, password):
     conn = BlitzGateway(username, password,
                         host=hostname, secure=True)
-    print(conn.connect())
+    print("Connected: %s" % conn.connect())
     conn.c.enableKeepAlive(60)
     return conn
 
@@ -64,7 +64,7 @@ def analyze(t, c, z):
     threshold_image = smoothed_image > threshold_value
     label_image, num_labels = dask_image.ndmeasure.label(threshold_image)
     name = 't:%s, c: %s, z:%s' % (t, c, z)
-    print(name)
+    print("Plane coordinates: %s" % name)
     return label_image, name
 
 
@@ -109,14 +109,14 @@ def main():
 
         global data
         data = load_binary_from_s3(image_id)
-        print(data)
+        print("Dask array: %s" % data)
 
         lazy_results = prepare_call(image)
 
         start = time.time()
         compute(lazy_results)
         elapsed = time.time() - start
-        print(elapsed)
+        print('Compute time: %s' % elapsed)
 
     finally:
         disconnect(conn)
