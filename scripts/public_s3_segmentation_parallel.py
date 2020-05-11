@@ -27,6 +27,9 @@ import dask.array as da
 import dask_image.ndfilters
 import dask_image.ndmeasure
 
+import matplotlib.pyplot as plt
+import numpy
+
 from omero.gateway import BlitzGateway
 
 import time
@@ -65,7 +68,8 @@ def analyze(t, c, z):
     label_image, num_labels = dask_image.ndmeasure.label(threshold_image)
     name = 't:%s, c: %s, z:%s' % (t, c, z)
     print("Plane coordinates: %s" % name)
-    return label_image, name
+    ref = 't_%s_c_%s_z_%s' % (t, c, z)
+    return label_image, ref
 
 
 # Prepare-call
@@ -92,6 +96,15 @@ def disconnect(conn):
     conn.close()
 
 
+# Save the first 5 results on disk
+def save_results(results):
+    print("Saving the first 5 results as png")
+    for r, name in results[:5]:
+        array = numpy.asarray(r)
+        value = "image_%s.png" % name
+        plt.imsave(value, array)
+
+
 # main
 def main():
     # Collect user credentials
@@ -114,9 +127,11 @@ def main():
         lazy_results = prepare_call(image)
 
         start = time.time()
-        compute(lazy_results)
+        results = compute(lazy_results)
         elapsed = time.time() - start
         print('Compute time (in seconds): %s' % elapsed)
+        save_results(results)
+
 
     finally:
         disconnect(conn)
