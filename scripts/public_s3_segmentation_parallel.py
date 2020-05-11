@@ -132,7 +132,6 @@ def main():
         print('Compute time (in seconds): %s' % elapsed)
         save_results(results)
 
-
     finally:
         disconnect(conn)
     print('done')
