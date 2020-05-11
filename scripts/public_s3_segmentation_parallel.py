@@ -100,7 +100,7 @@ def disconnect(conn):
 
 # Save the first 5 results on disk
 def save_results(results):
-    print("Saving the first 5 results as png")
+    print("Saving locally the first 5 results as png")
     for r, name in results[:5]:
         array = numpy.asarray(r)
         value = "image_%s.png" % name
