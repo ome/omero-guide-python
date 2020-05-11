@@ -121,7 +121,7 @@ def main():
         if len(images) == 0:
             print("No images in dataset")
             return
-        
+
         images = images[:1]
         analyze(conn, images, channel_label)
     finally:
