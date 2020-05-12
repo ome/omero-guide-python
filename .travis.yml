@@ -15,8 +15,10 @@ env:
 install:
   - pip install --upgrade jupyter-repo2docker
   - pip install --upgrade sphinx
+  - pip install --upgrade flake8
 
 script:
   - repo2docker --no-run .
+  - flake8 scripts
   - cd docs
   - make clean html linkcheck
