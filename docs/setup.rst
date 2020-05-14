@@ -12,7 +12,7 @@ We recommend to install omero-py using Conda.
 Conda manages programming environments in a manner similar to 
 `virtualenv <https://virtualenv.pypa.io/en/stable/>`_.
 You can install the various dependencies following the steps below (Option 1) or build locally a Docker Image
-using ``repo2docker`` (Option 2). When the installation is done, you should be ready to use the CellProfiler API and OMERO, see :doc:`gettingstarted`.
+using ``repo2docker`` (Option 2). When the installation is done, you should be ready to use the OMERO Python API, see :doc:`gettingstarted`.
 
 *Option 1*
 ~~~~~~~~~~
