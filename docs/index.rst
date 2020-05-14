@@ -15,7 +15,7 @@ Follow the instructions in the
 
    setup
    gettingstarted
-   simple-frap-example
+   frap/index.rst
    analyze_dask_s3
 
 **Contribute**
