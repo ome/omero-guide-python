@@ -27,7 +27,7 @@ This an OMERO script that runs server-side.
 
 import omero
 import json
-from cStringIO import StringIO
+from io import BytesIO
 
 import omero.scripts as scripts
 from omero.rtypes import rlong, rstring, unwrap
@@ -114,10 +114,10 @@ def create_figure_file(conn, figure_json):
     gid = i.getDetails().getGroup().getId()
     conn.SERVICE_OPTS.setOmeroGroup(gid)
 
-    json_string = json.dumps(figure_json)
-    file_size = len(json_string)
-    f = StringIO()
-    json.dump(figure_json, f)
+    json_bytes = json.dumps(figure_json).encode('utf-8')
+    file_size = len(json_bytes)
+    f = BytesIO()
+    f.write(json_bytes)
 
     update = conn.getUpdateService()
     orig_file = conn.createOriginalFileFromFileObj(
@@ -146,7 +146,7 @@ def get_panel_json(image, x, y, width, height, theT):
     px = image.getPrimaryPixels().getPhysicalSizeX()
     py = image.getPrimaryPixels().getPhysicalSizeY()
 
-    channels = map(lambda x: channelMarshal(x), image.getChannels())
+    channels = [channelMarshal(x) for x in image.getChannels()]
 
     img_json = {
         "labels": [],
