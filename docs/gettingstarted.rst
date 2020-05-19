@@ -6,16 +6,16 @@ Getting started with the OMERO Python API
 
 We will show:
 
-- How to connect to a server.
+- Connect to a server.
 
-- How load images.
+- Load images.
 
 - Run a simple `FRAP <https://en.wikipedia.org/wiki/Fluorescence_recovery_after_photobleaching>`_ analysis measuring 
   the intensity within a pre-existing ellipse ROI in a named Channel.
 
-- How to save the generated mean intensities and link them to the image(s).
+- Save the generated mean intensities and link them to the image(s).
 
-- How to save the generated plot on the server.
+- Save the generated plot on the server.
 
 
 **Setup**
