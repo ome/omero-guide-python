@@ -15,7 +15,6 @@ Follow the instructions in the
 
    setup
    gettingstarted
-   simple-frap-example
    analyze_dask_s3
 
 **Contribute**
