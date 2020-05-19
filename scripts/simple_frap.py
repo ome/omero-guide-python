@@ -20,6 +20,7 @@ def connect(hostname, username, password):
     conn = BlitzGateway(username, password,
                         host=hostname, secure=True)
     conn.connect()
+    conn.c.enableKeepAlive(60)
     return conn
 
 
