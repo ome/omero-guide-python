@@ -130,7 +130,7 @@ def save_plot(conn, image, plot_filename):
     green = np_array[::, ::, 1]
     blue = np_array[::, ::, 2]
     plane_gen = iter([red, green, blue])
-    i = conn.createImageFromNumpySeq(plane_gen, plot_filename, sizeC=3,
+    conn.createImageFromNumpySeq(plane_gen, plot_filename, sizeC=3,
                                      dataset=image.getParent())
 
 
