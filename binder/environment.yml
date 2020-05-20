@@ -7,12 +7,10 @@ dependencies:
   - scipy
   - pip
   # ome: minimal dependencies required to use the Python API
-  - zeroc-ice36-python
   - omero-py
   # dependencies to use for zarr work
   - dask
   - dask-image
   - imageio
   - requests
-  - s3fs
   - zarr
