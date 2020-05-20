@@ -34,7 +34,7 @@ The bleached spot has to be marked with an ellipse. Make sure that the ellipse R
 In this section, we go through the steps required to analyze the data.
 The script used in this document is :download:`simple_frap.py <../scripts/simple_frap.py>`.
 
-It is also available as 'SimpleFRAP' Jupyter notebook in the notebooks section.
+It is also available as the 'SimpleFRAP' Jupyter notebook in the notebooks section.
 
 
 Modules and methods which need to be imported:
@@ -112,5 +112,4 @@ Wrap it all up in an ``analyse`` method and call it from ``main``:
 
 An advanced version of this script is also available as `OMERO script <https://docs.openmicroscopy.org/omero/latest/developers/scripts/index.html>`_ :
 `simple_frap_with_figure.py <https://github.com/ome/training-scripts/blob/master/practical/python/server/simple_frap_with_figure.py>`_ 
-
 
