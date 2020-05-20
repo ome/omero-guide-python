@@ -29,7 +29,7 @@ When the installation is done, you should be ready to use the OMERO Python API, 
 *Option 1*
 ~~~~~~~~~~
 
-Install omero-py and additional packages for image analyis (see 
+Install omero-py and additional packages for image analysis (see 
 :download:`environment.yml <../binder/environment.yml>`) via Conda.
 
 - Install `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_ if necessary.
