@@ -77,7 +77,7 @@ Process the arguments:
     :start-after: # process
     :end-before: # wrap
 
-Access the date using the Python gateway:
+Access the data using the Python gateway:
 
 .. literalinclude:: ../scripts/hello_world_server.py
     :start-after: # wrap client
