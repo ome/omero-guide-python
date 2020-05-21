@@ -117,5 +117,5 @@ How to turn a script into an
 which runs on the server and can be directly launched via the web interface, see :doc:`server_script`.
 
 This ``simple_frap.py`` example as server-side OMERO.script: 
-:download:`simple_frap_omero.py <../scripts/simple_frap_server.py>`.
+:download:`simple_frap_server.py <../scripts/simple_frap_server.py>`.
 
