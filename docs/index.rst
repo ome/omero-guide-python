@@ -15,6 +15,7 @@ Follow the instructions in the
 
    setup
    gettingstarted
+   server_script
    analyze_dask_s3
 
 **Contribute**
