@@ -83,13 +83,13 @@ Access the data using the Python gateway:
     :start-after: # wrap client
     :end-before: # load the images
 
-We can then use the same method that the one in the client-side script to load the images
+We can then use the same method that the one in the client-side script to load the images:
 
 .. literalinclude:: ../scripts/hello_world_server.py
     :start-after: # load
     :end-before: # main
 
-In order the use the methods implemented above in a proper standalone script and return the output to the users: Wrap it all up and call them from main:
+In order to the use the methods implemented above in a proper standalone script and return the output to the users, wrap it all up and call them from main:
 
 .. literalinclude:: ../scripts/hello_world_server.py
     :start-after: # main
