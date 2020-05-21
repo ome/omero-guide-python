@@ -44,7 +44,9 @@ Modules and methods which need to be imported:
     :end-before: # Step 1
 
 
-Connect to the server:
+Connect to the server. It is also important to close the connection again
+to clear up potential resources held on the server. This is done in the 
+```disconnect`` method.
 
 .. literalinclude:: ../scripts/simple_frap.py
     :start-after: # Step 1

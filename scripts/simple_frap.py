@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 from getpass import getpass
 
 
-# Step 1 - Connect to OMERO server
+# Step 1 - Connect/Disconnect
 def connect(hostname, username, password):
     """
     Connect to an OMERO server
@@ -22,6 +22,14 @@ def connect(hostname, username, password):
     conn.connect()
     conn.c.enableKeepAlive(60)
     return conn
+
+
+def disconnect(conn):
+    """
+    Disconnect from an OMERO server
+    :param conn: The BlitzGateway
+    """
+    conn.close()
 
 
 # Step 3 - Load metadata (channel information)
@@ -81,7 +89,7 @@ def get_mean_intensities(conn, image, the_c, shape_id):
 # Step 6 - Plot the data
 def plot(values, plot_filename):
     """
-    Creates a simple plot of the given values
+    Create a simple plot of the given values
     and saves it.
     :param values: The values
     :param plot_filename: The file name
@@ -149,16 +157,17 @@ def analyse(conn, image_id, channel_name):
 
 def main():
     try:
-        hostname = "wss://workshop.openmicroscopy.org/omero-ws"
-        username = input("Username: ")
+        hostname = input("Host [wss://workshop.openmicroscopy.org/omero-ws]: \
+                         ") or "wss://workshop.openmicroscopy.org/omero-ws"
+        username = input("Username [trainer-1]: ") or "trainer-1"
         password = getpass("Password: ")
-        image_id = int(input("Image ID: "))
-        channel = input("Channel name: ")
+        image_id = int(input("Image ID [28662]: ") or 28662)
+        channel = input("Channel name [528.0]: ") or "528.0"
         conn = connect(hostname, username, password)
         analyse(conn, image_id, channel)
     finally:
         if conn:
-            conn.close()
+            disconnect(conn)
 
 
 if __name__ == "__main__":
