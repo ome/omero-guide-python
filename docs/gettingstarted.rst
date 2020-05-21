@@ -4,22 +4,28 @@ Getting started with the OMERO Python API
 **Description**
 ---------------
 
-We will use a Python script showing how to analyze data stored in an OMERO server.
-
 We will show:
 
-- How to connect to server.
+- Connect to a server.
 
-- How load images from a dataset.
+- Load images.
 
-- Run a simple FRAP analysis measuring the intensity within a pre-existing ellipse ROI in a named Channel.
+- Run a simple `FRAP <https://en.wikipedia.org/wiki/Fluorescence_recovery_after_photobleaching>`_ analysis measuring 
+  the intensity within a pre-existing ellipse ROI in a named Channel.
 
-- How to save the generated mean intensities and link them to the image(s).
+- Save the generated mean intensities and link them to the image(s).
+
+- Save the generated plot on the server.
+
 
 **Setup**
 ---------
 
 We recommend to use a Conda environment to install the OMERO Python bindings. Please read first :doc:`setup`.
+
+For the FRAP analysis you need a fluorescence time-lapse image, available at `<https://downloads.openmicroscopy.org/images/DV/will/FRAP/>`_.
+
+The bleached spot has to be marked with an ellipse. Make sure that the ellipse ROI spans the whole timelapse.
 
 
 **Step-by-Step**
@@ -28,38 +34,84 @@ We recommend to use a Conda environment to install the OMERO Python bindings. Pl
 In this section, we go through the steps required to analyze the data.
 The script used in this document is :download:`simple_frap.py <../scripts/simple_frap.py>`.
 
-Connect to the server:
+It is also available as the 'SimpleFRAP' Jupyter notebook in the notebooks section.
+
+
+Modules and methods which need to be imported:
 
 .. literalinclude:: ../scripts/simple_frap.py
-    :start-after: # Connect
-    :end-before: # Load-images
+    :start-after: # Imports
+    :end-before: # Step 1
 
 
-Load the dataset:
-
-.. literalinclude:: ../scripts/simple_frap.py
-    :start-after: # Load-images
-    :end-before: # Analyze-images
-
-
-We are now ready to analyze the images in the dataset:
+Connect to the server. It is also important to close the connection again
+to clear up potential resources held on the server. This is done in the 
+```disconnect`` method.
 
 .. literalinclude:: ../scripts/simple_frap.py
-    :start-after: # Analyze-images
-    :end-before: # Get channel
+    :start-after: # Step 1
+    :end-before: # Step 3
 
-Save the results as map annotation:
 
-.. literalinclude:: ../scripts/simple_frap.py
-    :start-after: # Save-results
-    :end-before: # Delete-old-annotations
-
-When done, close the session:
+Load the image:
 
 .. literalinclude:: ../scripts/simple_frap.py
-    :start-after: # Disconnect
-    :end-before: # main
+    :start-after: # Step 2
+    :end-before: # -
 
 
-**Exercises**
--------------
+Get relevant channel index:
+
+.. literalinclude:: ../scripts/simple_frap.py
+    :start-after: # Step 3
+    :end-before: # Step 4
+
+
+Get Ellipse ROI:
+
+.. literalinclude:: ../scripts/simple_frap.py
+    :start-after: # Step 4
+    :end-before: # Step 5
+
+
+Get intensity values:
+
+.. literalinclude:: ../scripts/simple_frap.py
+    :start-after: # Step 5
+    :end-before: # Step 6
+
+
+Plot the data using ``matplotlib``:
+
+.. literalinclude:: ../scripts/simple_frap.py
+    :start-after: # Step 6
+    :end-before: # Step 7
+
+
+Save the results as Map annotation:
+
+.. literalinclude:: ../scripts/simple_frap.py
+    :start-after: # Step 7
+    :end-before: # Step 8
+
+
+Save the plot:
+
+.. literalinclude:: ../scripts/simple_frap.py
+    :start-after: # Step 8
+    :end-before: # Step 9
+
+
+In order the use the methods implemented above in a proper standalone script:
+Wrap it all up in an ``analyse`` method and call it from ``main``:
+
+.. literalinclude:: ../scripts/simple_frap.py
+    :start-after: # Step 9
+
+
+**Further Reading**
+-------------------
+
+An advanced version of this script is also available as `OMERO script <https://docs.openmicroscopy.org/omero/latest/developers/scripts/index.html>`_ :
+`simple_frap_with_figure.py <https://github.com/ome/training-scripts/blob/master/practical/python/server/simple_frap_with_figure.py>`_ 
+

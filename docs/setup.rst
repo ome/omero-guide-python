@@ -1,21 +1,36 @@
 Install omero-py
 ================
 
-In this section, we show how to install omero-py in a `Conda <https://conda.io/en/latest/>`_ environment.
-We will use the Python API to access data stored in an OMERO server.
+In this section, we show how to install omero-py together with additional packages 
+for image analysis in a `Conda <https://conda.io/en/latest/>`_ environment.
 
+We will use the Python API to access data stored in an OMERO server. The image analysis
+is typically done with packages like `scikit-image <https://scikit-image.org/>`_ 
+or `dask <https://dask.org/>`_.
+
+If you want to use the Python API only for interacting with the OMERO server, like 
+scripting management / import workflows you can just install the omero-py package 
+by itself, see `omero-py <https://github.com/ome/omero-py/blob/master/README.rst>`_.
 
 **Setup**
 ---------
 
-We recommend to install omero-py using Conda.
+For using the examples and notebooks of this guide we recommend using Conda (Option 1).
 Conda manages programming environments in a manner similar to 
 `virtualenv <https://virtualenv.pypa.io/en/stable/>`_.
-You can install the various dependencies following the steps below (Option 1) or build locally a Docker Image
-using ``repo2docker`` (Option 2). When the installation is done, you should be ready to use the OMERO Python API, see :doc:`gettingstarted`.
+
+Alternatively you can use ``repo2docker`` to build and run a Docker image locally (Option 2).
+This Docker image will provide the Conda environment and Jupyter notebooks with some image 
+analysis workflows.
+
+When the installation is done, you should be ready to use the OMERO Python API, see :doc:`gettingstarted`.
+
 
 *Option 1*
 ~~~~~~~~~~
+
+Install omero-py and additional packages for image analysis (see 
+:download:`environment.yml <../binder/environment.yml>`) via Conda.
 
 - Install `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_ if necessary.
 
@@ -42,8 +57,11 @@ using ``repo2docker`` (Option 2). When the installation is done, you should be r
 *Option 2*
 ~~~~~~~~~~
 
-Alternatively you can create a local Docker Image using ``repo2docker``, see :download:`README.md <https://github.com/ome/omero-guide-python/blob/master/README.md>`::
+Create a local Docker Image using ``repo2docker``, see :download:`README.md <https://github.com/ome/omero-guide-python/blob/master/README.md>`::
 
+    $ pip install jupyter-repo2docker
+    $ git clone https://github.com/ome/omero-guide-python.git
+    $ cd omero-guide-python
     $ repo2docker .
 
 When the Image is ready:
