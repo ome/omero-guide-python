@@ -68,7 +68,7 @@ Now let's see how to convert the script above into a **server-side** script.
 The first step is to declare the parameters, the UI components will be built automatically from it. This script only needs to collect the dataset ID:
 
 .. literalinclude:: ../scripts/hello_world_server.py
-    :start-after: # Define
+    :start-after: # Start declaration
     :end-before: # Start
 
 Process the arguments:

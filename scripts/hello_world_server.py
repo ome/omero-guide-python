@@ -53,6 +53,7 @@ def load_images(conn, dataset_id):
 
 # main
 if __name__ == "__main__":
+    # Start declaration
     # Define the script name and description, and a single 'required' parameter
     client = scripts.client(
         'Hello World.py',
