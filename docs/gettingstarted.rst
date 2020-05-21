@@ -112,8 +112,10 @@ Wrap it all up in an ``analyse`` method and call it from ``main``:
 **Further Reading**
 -------------------
 
-For how to turn this script into an 
+How to turn a script into an 
 `OMERO script <https://docs.openmicroscopy.org/omero/latest/developers/scripts/index.html>`_ 
-which runs on the server and can be directly launched via the web interface, see
-:download:`simple_frap_omero.py <../scripts/simple_frap_omero.py>`
+which runs on the server and can be directly launched via the web interface, see :doc:`server_script`.
+
+This ``simple_frap.py`` example as server-side OMERO.script: 
+:download:`simple_frap_omero.py <../scripts/simple_frap_server.py>`.
 

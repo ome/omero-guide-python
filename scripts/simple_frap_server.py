@@ -170,7 +170,7 @@ def analyse(conn, image_id, channel_name):
 
 if __name__ == "__main__":
     client = scripts.client(
-        'simple_frap_omero.py',
+        'simple_frap_server.py',
         """
     This script does simple FRAP analysis using an Ellipse ROI previously
     saved on a time-lapse image. Data is plotted and a new OMERO images is
