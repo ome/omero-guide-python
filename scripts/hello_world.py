@@ -58,6 +58,7 @@ def load_images(conn, dataset_id):
         print("---- Processing image", image.id)
     return images
 
+
 # main
 if __name__ == "__main__":
     try:

@@ -25,8 +25,9 @@ This a basic OMERO script that runs server-side.
 
 # Import
 import omero.scripts as scripts
-from omero.rtypes import rlong
 from omero.gateway import BlitzGateway
+from omero.rtypes import robject, rstring
+
 
 # load
 def load_images(conn, dataset_id):
@@ -38,6 +39,8 @@ def load_images(conn, dataset_id):
     """
     dataset = conn.getObject("Dataset", dataset_id)
     images = []
+    if dataset is None:
+        return None
     for image in dataset.listChildren():
         images.append(image)
     if len(images) == 0:
@@ -46,6 +49,7 @@ def load_images(conn, dataset_id):
     for image in images:
         print("---- Processing image", image.id)
     return images
+
 
 # main
 if __name__ == "__main__":
@@ -68,7 +72,7 @@ if __name__ == "__main__":
         for key in client.getInputKeys():
             if client.getInput(key):
                 script_params[key] = client.getInput(key, unwrap=True)
-        
+
         dataset_id = script_params["datasetId"]
 
         # wrap client to use the Blitz Gateway
