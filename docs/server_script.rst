@@ -80,7 +80,7 @@ Process the arguments:
 Access the date using the Python gateway:
 
 .. literalinclude:: ../scripts/hello_world_server.py
-    :start-after: # process
+    :start-after: # wrap client
     :end-before: # wrap
 
 We can then use the same method that the one in the client-side script to load the images
