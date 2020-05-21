@@ -2,7 +2,7 @@ How to write a server-side script
 =================================
 
 
-In this section, we show to convert a Python script into a script that can
+In this section, we show how to convert a Python script into a script that can
 be run server-side.
 We recommend that you read `OMERO.scripts guide <https://docs.openmicroscopy.org/omero/latest/developers/scripts/user-guide.html>`_.
 
