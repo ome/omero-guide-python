@@ -83,7 +83,7 @@ def get_mean_intensities(conn, image, the_c, shape_id):
     for t in range(size_t):
         stats = roi_service.getShapeStatsRestricted([shape_id],
                                                     the_z, t, [the_c])
-        meanvalues.append(stats[0].mean[the_c])
+        meanvalues.append(stats[0].mean[0])
     return meanvalues
 
 
