@@ -29,6 +29,9 @@ Step-by-step
 The scripts used in this document are :download:`hello_world.py <../scripts/hello_world.py>`
 and :download:`hello_world_server.py <../scripts/hello_world_server.py>`.
 
+It is also available as the 'OMEROHelloWorld' Jupyter notebook in the notebooks section.
+
+
 
 Client-side script
 ~~~~~~~~~~~~~~~~~~
@@ -89,7 +92,7 @@ We can then use the same method that the one in the client-side script to load t
     :start-after: # load
     :end-before: # main
 
-In order to the use the methods implemented above in a proper standalone script and return the output to the users, wrap it all up and call them from main:
+In order to use the methods implemented above in a proper standalone script and return the output to the users, wrap it all up and call them from main:
 
 .. literalinclude:: ../scripts/hello_world_server.py
     :start-after: # main
