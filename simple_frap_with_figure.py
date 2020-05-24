@@ -116,12 +116,14 @@ def create_figure_file(conn, figure_json):
 
     json_bytes = json.dumps(figure_json).encode('utf-8')
     file_size = len(json_bytes)
-    f = BytesIO()
-    f.write(json_bytes)
-
     update = conn.getUpdateService()
-    orig_file = conn.createOriginalFileFromFileObj(
-        f, '', figure_name, file_size, mimetype="application/json")
+    f = BytesIO()
+    try:
+        f.write(json_bytes)
+        orig_file = conn.createOriginalFileFromFileObj(
+            f, '', figure_name, file_size, mimetype="application/json")
+    finally:
+        f.close()
     fa = omero.model.FileAnnotationI()
     fa.setFile(omero.model.OriginalFileI(orig_file.getId(), False))
     fa.setNs(rstring(JSON_FILEANN_NS))
