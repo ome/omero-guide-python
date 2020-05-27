@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Python API guide'
-copyright = u'2019, Open Microscopy Environment'
+copyright = u'2019-2020, Open Microscopy Environment'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
