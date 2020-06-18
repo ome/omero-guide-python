@@ -167,7 +167,7 @@ def run(username, password, idr_obj, local_obj, host, port):
         conn.close()
 
 
-description = """Usage: To copy map annotations from Project: 1 on IDR
+description = """Usage: To copy map annotations from Project:1 on IDR
 to Project:2 on 'local' server:
 $ python idr_get_map_annotation.py user pass Project:1 Project:2
 --server localhost
