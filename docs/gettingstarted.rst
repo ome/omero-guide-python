@@ -1,8 +1,8 @@
 Getting started with the OMERO Python API
 =========================================
 
-**Description**
----------------
+Description
+-----------
 
 We will show:
 
@@ -18,8 +18,8 @@ We will show:
 - Save the generated plot on the server.
 
 
-**Setup**
----------
+Setup
+-----
 
 We recommend to use a Conda environment to install the OMERO Python bindings. Please read first :doc:`setup`.
 
@@ -28,8 +28,8 @@ For the FRAP analysis you need a fluorescence time-lapse image, available at `<h
 The bleached spot has to be marked with an ellipse. Make sure that the ellipse ROI spans the whole timelapse.
 
 
-**Step-by-Step**
-----------------
+Step-by-Step
+------------
 
 In this section, we go through the steps required to analyze the data.
 The script used in this document is :download:`simple_frap.py <../scripts/simple_frap.py>`.
@@ -109,8 +109,8 @@ Wrap it all up in an ``analyse`` method and call it from ``main``:
     :start-after: # Step 9
 
 
-**Further Reading**
--------------------
+Further Reading
+---------------
 
 How to turn a script into an 
 `OMERO script <https://docs.openmicroscopy.org/omero/latest/developers/scripts/index.html>`_ 

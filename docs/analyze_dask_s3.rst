@@ -1,28 +1,28 @@
 Analyze data stored in a public S3 repository in parallel 
 =========================================================
 
-**Description:**
-----------------
+Description
+-----------
 
 We will show how to use `dask <https://dask.org/>`_ to analyze an IDR image
 stored in a public S3 repository
 
 We will show:
 
-- How to connect to IDR to retrieve the image metadata
+- How to connect to IDR to retrieve the image metadata.
 
-- How to load the Zarr binary stored in a public repository
+- How to load the Zarr binary stored in a public repository.
 
 - How to run a segmentation on each plane in parallel.
 
 
-**Setup**
----------
+Setup
+-----
 
 We recommend to use a Conda environment to install the OMERO Python bindings. Please read first :doc:`setup`.
 
-**Step-by-Step**
-----------------
+Step-by-Step
+------------
 
 In this section, we go through the steps required to analyze the data.
 The script used in this document is :download:`public_s3_segmentation_parallel.py <../scripts/public_s3_segmentation_parallel.py>`.
@@ -74,3 +74,9 @@ When done, close the session:
 .. literalinclude:: ../scripts/public_s3_segmentation_parallel.py
     :start-after: # Disconnect
     :end-before: # main
+
+In order the use the methods implemented above in a proper standalone script:
+**Wrap it all up** in ``main``:
+
+.. literalinclude:: ../scripts/public_s3_segmentation_parallel.py
+    :start-after: # main
