@@ -144,8 +144,15 @@ def run(username, password, idr_obj, local_obj, host, port):
     try:
         conn.connect()
         # Project:1
+        if ':' not in idr_obj or ':' not in local_obj:
+            print('Objects must be: %s' % obj_help)
+            return
         dtype = idr_obj.split(':')[0]
         idr_id = idr_obj.split(':')[1]
+        localtype = local_obj.split(':')[0]
+        if dtype != localtype:
+            print ("Object types must match")
+            return
         local_id = local_obj.split(':')[1]
         if dtype == 'Project':
             annotate_project(conn, local_id, idr_id)
@@ -154,6 +161,8 @@ def run(username, password, idr_obj, local_obj, host, port):
             annotate_plate(conn, plate, idr_id)
         elif dtype == 'Screen':
             annotate_screen(conn, local_id, idr_id)
+        else:
+            print("Only supports Project, Screen or Plate")
     finally:
         conn.close()
 
