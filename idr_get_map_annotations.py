@@ -151,7 +151,7 @@ def run(username, password, idr_obj, local_obj, host, port):
         idr_id = idr_obj.split(':')[1]
         localtype = local_obj.split(':')[0]
         if dtype != localtype:
-            print ("Object types must match")
+            print("Object types must match")
             return
         local_id = local_obj.split(':')[1]
         if dtype == 'Project':
@@ -174,6 +174,7 @@ $ python idr_get_map_annotation.py user pass Project:1 Project:2
 """
 
 obj_help = "Project:ID, Plate:ID or Screen:ID"
+
 
 def main(args):
     # Usage, see: $ python idr_get_map_annotation.py -h
