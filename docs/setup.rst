@@ -12,8 +12,8 @@ If you want to use the Python API only for interacting with the OMERO server, li
 scripting management / import workflows you can just install the omero-py package 
 by itself, see `omero-py <https://github.com/ome/omero-py/blob/master/README.rst>`_.
 
-**Setup**
----------
+Setup
+-----
 
 For using the examples and notebooks of this guide we recommend using Conda (Option 1).
 Conda manages programming environments in a manner similar to 
