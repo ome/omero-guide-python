@@ -158,14 +158,21 @@ def run(username, password, idr_obj, local_obj, host, port):
         conn.close()
 
 
+description = """Usage: To copy map annotations from Project: 1 on IDR
+to Project:2 on 'local' server:
+$ python idr_get_map_annotation.py user pass Project:1 Project:2
+--server localhost
+"""
+
+obj_help = "Project:ID, Plate:ID or Screen:ID"
+
 def main(args):
-    # Usage: $ python idr_get_map_annotation.py username
-    # password idr_id local_id
-    parser = argparse.ArgumentParser()
+    # Usage, see: $ python idr_get_map_annotation.py -h
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument('username')
     parser.add_argument('password')
-    parser.add_argument('idr_obj')      # e.g. Screen:1 or Plate
-    parser.add_argument('local_obj')
+    parser.add_argument('idr_obj', help=obj_help),
+    parser.add_argument('local_obj', help=obj_help)
     parser.add_argument('--server', default="workshop.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
