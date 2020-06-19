@@ -1,6 +1,11 @@
 # User guides for the OMERO Python API
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks)
 
+[![Documentation Status](https://readthedocs.org/projects/omero-guide-python/badge/?version=latest)](https://omero-guides.readthedocs.io/en/latest/python/docs/index.html)
+
+The documentation is deployed at [Use Python API](https://omero-guides.readthedocs.io/en/latest/python/docs/index.html)
+
+
 This guide demonstrates how to use the OMERO Python API.
 
 To run the notebooks, you can either [run on mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks) or build locally with [repo2docker](https://repo2docker.readthedocs.io/).
