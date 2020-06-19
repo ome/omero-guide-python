@@ -75,7 +75,7 @@ When done, close the session:
     :start-after: # Disconnect
     :end-before: # main
 
-In order the use the methods implemented above in a proper standalone script:
+In order to use the methods implemented above in a proper standalone script:
 **Wrap it all up** in ``main``:
 
 .. literalinclude:: ../scripts/public_s3_segmentation_parallel.py
