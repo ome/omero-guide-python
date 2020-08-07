@@ -36,6 +36,7 @@ thus removing the Tag, but not deleting it.
 
 import argparse
 import omero
+import getpass
 from omero.gateway import BlitzGateway
 from omero.rtypes import wrap
 
@@ -168,8 +169,6 @@ def run(password, admin_name, target, image, host, port):
 
 def main(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument('password',
-                        help="The password of the person cleaning up")
     parser.add_argument('--name', default="trainer-1",
                         help="The username of the person cleaning up")
     parser.add_argument('--dataset', default=None,
@@ -182,7 +181,8 @@ def main(args):
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.password, args.name, args.dataset, args.image, args.server,
+    password = getpass.getpass()
+    run(password, args.name, args.dataset, args.image, args.server,
         args.port)
 
 

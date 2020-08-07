@@ -20,6 +20,7 @@
 # Delete ROIs from all Images in a Dataset
 
 import argparse
+import getpass
 from omero.gateway import BlitzGateway
 
 
@@ -53,7 +54,6 @@ def run(name, password, dataset_name, dataset_id, host, port):
 
 def main(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument('password')
     parser.add_argument('--datasetid', default=-1,
                         help="The ID of the dataset")
     parser.add_argument('--datasetname', default="",
@@ -64,7 +64,8 @@ def main(args):
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.name, args.password, args.datasetname, args.datasetid,
+    password = getpass.getpass()
+    run(args.name, password, args.datasetname, args.datasetid,
         args.server, args.port)
 
 

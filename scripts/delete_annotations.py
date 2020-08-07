@@ -29,6 +29,7 @@
 # namespace omero.batch_roi_export.map_ann
 
 import argparse
+import getpass
 from omero.gateway import BlitzGateway
 import omero
 
@@ -71,7 +72,6 @@ def run(name, password, dataset_name, anntype, ns, host, port):
 
 def main(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument('password')
     parser.add_argument('datasetname')
     parser.add_argument('--name', default="trainer-1",
                         help="The user deleting the annotations")
@@ -84,7 +84,8 @@ def main(args):
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.name, args.password, args.datasetname, args.anntype,
+    password = getpass.getpass()s
+    run(args.name, password, args.datasetname, args.anntype,
         args.namespace, args.server, args.port)
 
 

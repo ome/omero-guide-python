@@ -24,6 +24,7 @@ for users user-1 through user-50.
 """
 
 import argparse
+import getpass
 import omero
 from omero.gateway import BlitzGateway
 from omero.model import DatasetI
@@ -86,14 +87,14 @@ def run(password, project_name, dataset_name, host, port):
 
 def main(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument('password')
     parser.add_argument('project')
     parser.add_argument('dataset')
     parser.add_argument('--server', default="outreach.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.password, args.project, args.dataset, args.server, args.port)
+    password = getpass.getpass()
+    run(password, args.project, args.dataset, args.server, args.port)
 
 
 if __name__ == '__main__':

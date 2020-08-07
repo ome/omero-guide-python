@@ -20,6 +20,7 @@
 # Script uses Channel min/max intensity to generate OMERO.table on Plate
 
 import argparse
+import getpass
 import omero
 from omero.rtypes import rstring
 import omero.grid
@@ -118,13 +119,13 @@ def run(username, password, plate_id, host, port):
 def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('username')
-    parser.add_argument('password')
     parser.add_argument('plate_id')
     parser.add_argument('--server', default="workshop.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.username, args.password, args.plate_id, args.server, args.port)
+    password = getpass.getpass()
+    run(args.username, password, args.plate_id, args.server, args.port)
 
 
 if __name__ == '__main__':

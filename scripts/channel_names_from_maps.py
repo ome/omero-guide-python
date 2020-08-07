@@ -20,6 +20,7 @@
 # Script uses map annotations on each Image to rename channels
 
 import argparse
+import getpass
 from omero.gateway import BlitzGateway
 
 
@@ -63,13 +64,13 @@ def run(username, password, project_id, host, port):
 def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('username')
-    parser.add_argument('password')
     parser.add_argument('project_id')
     parser.add_argument('--server', default="workshop.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.username, args.password, args.project_id, args.server, args.port)
+    password = getpass.getpass()
+    run(args.username, password, args.project_id, args.server, args.port)
 
 
 if __name__ == '__main__':

@@ -30,6 +30,7 @@ New Ratings created, belonging to user-x.
 """
 
 import argparse
+import getpass
 from omero.gateway import BlitzGateway
 from omero import ValidationException
 from omero.rtypes import rstring, rlong
@@ -114,12 +115,12 @@ def run(datasetname, password, host, port):
 def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('datasetname', default=None)
-    parser.add_argument('password', default=None)
     parser.add_argument('--server', default="workshop.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.datasetname, args.password, args.server, args.port)
+    password = getpass.getpass()
+    run(args.datasetname, password, args.server, args.port)
 
 
 if __name__ == '__main__':

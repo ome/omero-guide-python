@@ -42,6 +42,7 @@ Charles Darwin. Yoshinori is now number 2 and is written in japanese signs.
 """
 
 import argparse
+import getparse
 from omero.rtypes import rstring
 from omero.gateway import BlitzGateway
 
@@ -110,12 +111,12 @@ def run(username, password, host, port):
 def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('username')
-    parser.add_argument('password')
     parser.add_argument('--server', default="workshop.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.username, args.password, args.server, args.port)
+    password = getpass.getpass()
+    run(args.username, password, args.server, args.port)
 
 
 if __name__ == '__main__':

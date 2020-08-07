@@ -36,6 +36,7 @@ python link_dataset_to_new_project.py
 """
 
 import argparse
+import getpass
 import omero
 from omero.gateway import BlitzGateway
 from omero.model import DatasetI
@@ -93,7 +94,6 @@ def run(password, project_name, dataset_names, host, port):
 
 def main(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument('password')
     parser.add_argument('project')
     parser.add_argument('--dataset', '-d', type=str, action='append',
                         help='One or more datasets to link to the project')
@@ -101,7 +101,8 @@ def main(args):
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.password, args.project, args.dataset, args.server, args.port)
+    password = getpass.getpass()
+    run(password, args.project, args.dataset, args.server, args.port)
 
 
 if __name__ == '__main__':

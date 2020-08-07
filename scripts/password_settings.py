@@ -26,6 +26,7 @@ The change must be done by an admin e.g. trainer-1.
 """
 
 import argparse
+import getpass
 import omero
 from omero.rtypes import rstring
 
@@ -52,16 +53,15 @@ def run(password, new_password, admin_name, host, port):
 
 def main(args):
     parser = argparse.ArgumentParser()
-    # The password of the user changing the passwords
-    parser.add_argument('password')
-    parser.add_argument('newpassword')
     parser.add_argument('--name', default="trainer-1",
                         help="The user changing the passwords")
     parser.add_argument('--server', default="workshop.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.password, args.newpassword, args.name, args.server, args.port)
+    password = getpass.getpass()
+    newpassword = getpass.getpass()
+    run(password, newpassword, args.name, args.server, args.port)
 
 
 if __name__ == '__main__':

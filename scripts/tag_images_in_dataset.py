@@ -26,6 +26,7 @@ The dataset and the tag are specified as a parameter.
 """
 
 import argparse
+import getparse
 import omero
 from omero.gateway import BlitzGateway
 from omero.model import ImageAnnotationLinkI
@@ -97,7 +98,6 @@ def run(password, admin_name, target, tag, host, port):
 
 def main(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument('password')
     parser.add_argument('target')
     parser.add_argument('tag')
     parser.add_argument('--name', default="trainer-1",
@@ -106,7 +106,8 @@ def main(args):
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.password, args.name, args.target, args.tag, args.server,
+    password = getpass.getpass()
+    run(password, args.name, args.target, args.tag, args.server,
         args.port)
 
 

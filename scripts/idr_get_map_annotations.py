@@ -27,6 +27,7 @@
 # names to match local objects with those in IDR.
 
 import argparse
+import getpass
 import omero
 from omero.gateway import BlitzGateway
 import requests
@@ -180,14 +181,14 @@ def main(args):
     # Usage, see: $ python idr_get_map_annotation.py -h
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('username')
-    parser.add_argument('password')
     parser.add_argument('idr_obj', help=obj_help),
     parser.add_argument('local_obj', help=obj_help)
     parser.add_argument('--server', default="workshop.openmicroscopy.org",
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    run(args.username, args.password, args.idr_obj, args.local_obj,
+    password = getpass.getpass()
+    run(args.username, password, args.idr_obj, args.local_obj,
         args.server, args.port)
 
 
