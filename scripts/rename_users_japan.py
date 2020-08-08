@@ -42,7 +42,7 @@ Charles Darwin. Yoshinori is now number 2 and is written in japanese signs.
 """
 
 import argparse
-import getparse
+import getpass
 from omero.rtypes import rstring
 from omero.gateway import BlitzGateway
 

@@ -84,7 +84,7 @@ def main(args):
                         help="OMERO server hostname")
     parser.add_argument('--port', default=4064, help="OMERO server port")
     args = parser.parse_args(args)
-    password = getpass.getpass()s
+    password = getpass.getpass()
     run(args.name, password, args.datasetname, args.anntype,
         args.namespace, args.server, args.port)
 

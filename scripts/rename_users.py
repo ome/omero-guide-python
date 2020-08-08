@@ -24,7 +24,7 @@ This script sets the FirstName and LastName for user-1 to user-50
 """
 
 import argparse
-import getparse
+import getpass
 from omero.rtypes import rstring
 from omero.gateway import BlitzGateway
 

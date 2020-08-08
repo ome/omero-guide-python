@@ -26,7 +26,7 @@ The dataset and the tag are specified as a parameter.
 """
 
 import argparse
-import getparse
+import getpass
 import omero
 from omero.gateway import BlitzGateway
 from omero.model import ImageAnnotationLinkI

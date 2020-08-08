@@ -25,7 +25,7 @@ for users user-1 through user-50
 """
 
 import argparse
-import getparse
+import getpass
 import omero
 from omero.gateway import BlitzGateway
 from omero.model.enums import UnitsTime
