@@ -1,5 +1,5 @@
-How to write a server-side script 
-=================================
+How to convert a client-side script into a server-side script 
+=============================================================
 
 
 In this section, we show how to convert a Python script into a script that can
