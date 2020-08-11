@@ -9,8 +9,7 @@ dependencies:
   # ome: minimal dependencies required to use the Python API
   - omero-py
   # dependencies to use for zarr work
-  - dask
   - dask-image
   - imageio
-  - requests
-  - zarr
+  - pip:
+    - ome-zarr
