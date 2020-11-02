@@ -2,14 +2,14 @@ channels:
   - conda-forge
   - ome
 dependencies:
-  - matplotlib
-  - scikit-image
-  - scipy
+  - matplotlib=3.3.2
+  - scikit-image=0.17.2
+  - scipy=1.5.2
   - pip
   # ome: minimal dependencies required to use the Python API
   - omero-py
   # dependencies to use for zarr work
-  - dask-image
-  - imageio
+  - imageio=2.6.1
   - pip:
     - ome-zarr
+    - dask-image
