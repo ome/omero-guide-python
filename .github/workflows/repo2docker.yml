@@ -15,7 +15,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - name: repo2docker install
-        run: pip install --upgrade jupyter-repo2docker
-      - name: Build container
-        run: repo2docker --no-run .
+      - name: Set no_push variable
+        id: nopush
+        run:  |
+          if [[ ${{ github.ref }} =~ 'refs/tags/' ]]; then
+            echo "::set-output name=nopush::"
+          else
+            echo "::set-output name=nopush::true"
+          fi
+        shell: bash
+      - name: Check no no_push_to_cache
+        run: echo ${{ steps.nopush.outputs.nopush }}
+      - name: update jupyter dependencies with repo2docker
+        uses: jupyterhub/repo2docker-action@master
+        with:
+          NO_PUSH: ${{ steps.nopush.outputs.nopush }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          BINDER_CACHE: true
+          PUBLIC_REGISTRY_CHECK: true
