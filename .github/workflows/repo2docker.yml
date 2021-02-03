@@ -35,6 +35,5 @@ jobs:
           NO_PUSH: ${{ steps.nopush.outputs.nopush }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          BINDER_CACHE: true
           PUBLIC_REGISTRY_CHECK: true
           ADDITIONAL_TAG: ${{ steps.get_version.outputs.VERSION }}
