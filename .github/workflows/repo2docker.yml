@@ -27,6 +27,7 @@ jobs:
       - name: Check no no_push_to_cache
         run: echo ${{ steps.nopush.outputs.nopush }}
       - name: Get the version
+        if: startsWith(github.ref, 'refs/tags')
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
       - name: update jupyter dependencies with repo2docker
@@ -37,3 +38,4 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           PUBLIC_REGISTRY_CHECK: true
           ADDITIONAL_TAG: ${{ steps.get_version.outputs.VERSION }}
+          IMAGE_NAME: ${{ github.repository }}
