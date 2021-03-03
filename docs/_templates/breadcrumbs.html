@@ -1,0 +1,9 @@
+{%- extends "sphinx_rtd_theme/breadcrumbs.html" %}
+
+{% block breadcrumbs_aside %}
+<li class="wy-breadcrumbs-aside">
+    {% if hasdoc(pagename) and pagename != "search" and pagename != "genindex" %}
+      <a href="https://www.openmicroscopy.org" class="fa fa-bitbucket"> {{ _('Visit tutorials') }}</a>
+    {% endif %}
+  </li>
+{% endblock %}
