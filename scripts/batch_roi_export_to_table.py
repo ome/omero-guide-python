@@ -245,19 +245,23 @@ def save_table(conn, images, image_data, script_params, project=None):
     table_name = "batch_roi_export"
     table = resources.newTable(repository_id, table_name)
 
-    # Create table
-    image_ids = [i.id for i in images]
-    img_column = ImageColumn('Image', '', image_ids)
-    cols = [DoubleColumn(k, '', image_data[k]) for k in SUMMARY_COL_NAMES]
-    data = [img_column] + cols
-    table.initialize(data)
-    table.addData(data)
-    table.close()
+    try:
+        # Create table
+        image_ids = [i.id for i in images]
+        img_column = ImageColumn('Image', '', image_ids)
+        cols = [DoubleColumn(k, '', image_data[k]) for k in SUMMARY_COL_NAMES]
+        data = [img_column] + cols
+        table.initialize(data)
+        table.addData(data)
 
-    if project is None:
-        log("No Project found to link table")
-    else:
-        link_table(conn, table, project)
+        if project is None:
+            log("No Project found to link table")
+        else:
+            link_table(conn, table, project)
+
+    finally:
+        # after linking, we can close
+        table.close()
 
 
 def save_map_annotations(conn, images, image_data, script_params):
