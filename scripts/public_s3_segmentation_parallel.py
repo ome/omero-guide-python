@@ -58,7 +58,7 @@ def load_image(conn, image_id):
 
 # Load-binary
 def load_binary_from_s3(id, resolution='4'):
-    endpoint_url = 'https://s3.embassy.ebi.ac.uk/'
+    endpoint_url = 'https://uk1s3.embassy.ebi.ac.uk/'
     root = 'idr/zarr/v0.1/%s.zarr/%s/' % (id, resolution)
     return da.from_zarr(endpoint_url + root)
 
