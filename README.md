@@ -13,7 +13,9 @@ This guide demonstrates how to use the OMERO Python API.
 
 To run the notebooks, you can either build locally with [repo2docker](https://repo2docker.readthedocs.io/) or [run on mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks) or [run in Colab](https://colab.research.google.com/github/ome/omero-guide-python/). To run the notebooks either on [mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks) or [Colab](https://colab.research.google.com/github/ome/omero-guide-python/), the OMERO server you use will need to have [websockets support](https://docs.openmicroscopy.org/omero/latest/sysadmins/websockets.html) enabled.
 
-To build locally:
+## Run the scripts and notebooks locally
+
+Building locally using ``repo2docker``:
 
  * Install [Docker](https://www.docker.com/) if required
  * Create a virtual environment and install repo2docker from PyPI.
@@ -21,6 +23,7 @@ To build locally:
  * Run ``repo2docker``. 
  * Depending on the permissions, you might have to run the command as an admin
 
+Running the commands:
 
 ```
 pip install jupyter-repo2docker
@@ -28,6 +31,17 @@ git clone https://github.com/ome/omero-guide-python.git
 cd omero-guide-python
 repo2docker .
 ```
+
+Building locally using conda and Jupyter:
+
+ * Create a conda environment i.e. ``conda env update -n stardist -f binder/environment.yml``
+ * Activate the newly created environment
+
+The following steps are only required if you want to the notebooks
+ * In the environment, install ``jupyter`` e.g. ``pip install jupyter``
+ * Add the virtualenv as a jupyter kernel i.e. ``ipython kernel install --name "stardist" --user``
+ * Open jupyter notebook i.e. ``jupyter notebook`` and select the ``stardist`` kernel
+
 
 See also [setup.rst](https://github.com/ome/omero-guide-python/blob/master/docs/setup.rst)
 
