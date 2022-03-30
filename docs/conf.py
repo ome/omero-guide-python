@@ -336,6 +336,9 @@ epub_exclude_files = ['search.html']
 #epub_use_index = True
 
 # Regular expressions that match URIs that should not be checked when doing a linkcheck build
-linkcheck_ignore = [r'https://idr-analysis.openmicroscopy.org/training']
+linkcheck_ignore = [
+  r'https://idr-analysis.openmicroscopy.org/training',
+  r'https://mybinder.org/v2/gh/ome/omero-guide-python/*',
+]
 
 
