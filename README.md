@@ -37,7 +37,7 @@ Building locally using conda and Jupyter:
  * Create a conda environment i.e. ``conda env update -n stardist -f binder/environment.yml``
  * Activate the newly created environment
 
-The following steps are only required if you want to the notebooks
+The following steps are only required if you want to run the notebooks
  * In the environment, install ``jupyter`` e.g. ``pip install jupyter``
  * Add the virtualenv as a jupyter kernel i.e. ``ipython kernel install --name "stardist" --user``
  * Open jupyter notebook i.e. ``jupyter notebook`` and select the ``stardist`` kernel
