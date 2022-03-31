@@ -5,6 +5,8 @@ dependencies:
   - pip
   # ome: minimal dependencies required to use the Python API
   - omero-py
+  # dependency used to convert the OMERO masks into numpy array
+  - omero-cli-zarr
   - pandas
   - tensorflow
   - pip:
