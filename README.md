@@ -41,10 +41,9 @@ The following steps are only required if you want to run the notebooks
  * If you have Anaconda installed:
    * Start Jupyter from the Anaconda-navigator
    * Select the notebook you wish to run and select the ``Kernel>Change kernel>Python [conda env:stardist]``
- * If it is not installed:
+ * If Anaconda is not installed:
    * In the environment, install ``jupyter`` e.g. ``pip install jupyter``
-   * Add the virtualenv as a jupyter kernel (optional) i.e. ``ipython kernel install --name "stardist" --user``
-   * Open jupyter notebook i.e. ``jupyter notebook`` and select the ``stardist`` kernel if set or ``[conda env:stardist]``
+   * Open jupyter notebook i.e. ``jupyter notebook`` and select the ``[conda env:stardist]`` kernel
 
 
 See also [setup.rst](https://github.com/ome/omero-guide-python/blob/master/docs/setup.rst)
