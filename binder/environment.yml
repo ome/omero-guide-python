@@ -13,3 +13,5 @@ dependencies:
     - stardist
     # dependency used to convert the OMERO masks into numpy array
     - omero-cli-zarr
+    # dependency to save the labels as geojson file
+    - geojson
