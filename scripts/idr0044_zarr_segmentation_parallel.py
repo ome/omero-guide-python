@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 #
-# Copyright (c) 2020 University of Dundee.
+# Copyright (c) 2020-2022 University of Dundee.
 #
 #   Redistribution and use in source and binary forms, with or without modification, 
 #   are permitted provided that the following conditions are met:
@@ -42,20 +42,6 @@ import time
 data = None
 
 
-# Connect to the server
-def connect(hostname, username, password):
-    conn = BlitzGateway(username, password,
-                        host=hostname, secure=True)
-    print("Connected: %s" % conn.connect())
-    conn.c.enableKeepAlive(60)
-    return conn
-
-
-# Load-image
-def load_image(conn, image_id):
-    return conn.getObject('Image', image_id)
-
-
 # Load-binary
 def load_binary_from_s3(id, resolution='4'):
     endpoint_url = 'https://uk1s3.embassy.ebi.ac.uk/'
@@ -77,12 +63,12 @@ def analyze(t, c, z):
 
 
 # Prepare-call
-def prepare_call(image):
-    middle_z = image.getSizeZ() // 2
-    middle_t = image.getSizeT() // 2
-    range_t = 5
-    range_z = 5
-    number_c = image.getSizeC()
+def prepare_call(dimensions):
+    middle_z = dimensions[2] // 2
+    middle_t = dimensions[0] // 2
+    range_t = 2
+    range_z = 2 
+    number_c = dimensions[1]
     lazy_results = []
     for t in range(middle_t - range_t, middle_t + range_t):
         for z in range(middle_z - range_z, middle_z + range_z):
@@ -97,11 +83,6 @@ def compute(lazy_results):
     return dask.compute(*lazy_results)
 
 
-# Disconnect
-def disconnect(conn):
-    conn.close()
-
-
 # Save the first 5 results on disk
 def save_results(results):
     print("Saving locally the first 5 results as png")
@@ -113,33 +94,20 @@ def save_results(results):
 
 # main
 def main():
-    # Collect user credentials
-    try:
-        host = "ws://idr.openmicroscopy.org/omero-ws"
-        username = "public"
-        password = "public"
-        image_id = "4007801"
+    # Collect image ID
+    image_id = "4007801"
 
-        # Connect to the server
-        conn = connect(host, username, password)
+    global data
+    data = load_binary_from_s3(image_id)
+    print("Dask array: %s" % data)
 
-        # Load the image
-        image = load_image(conn, image_id)
+    lazy_results = prepare_call(data.shape)
 
-        global data
-        data = load_binary_from_s3(image_id)
-        print("Dask array: %s" % data)
-
-        lazy_results = prepare_call(image)
-
-        start = time.time()
-        results = compute(lazy_results)
-        elapsed = time.time() - start
-        print('Compute time (in seconds): %s' % elapsed)
-        save_results(results)
-
-    finally:
-        disconnect(conn)
+    start = time.time()
+    results = compute(lazy_results)
+    elapsed = time.time() - start
+    print('Compute time (in seconds): %s' % elapsed)
+    save_results(results)
     print('done')
 
 
