@@ -11,7 +11,7 @@ The documentation is deployed at [Use Python API](https://omero-guides.readthedo
 
 This guide demonstrates how to use the OMERO Python API.
 
-To run the notebooks, you can either build locally with [repo2docker](https://repo2docker.readthedocs.io/) or [run on mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks) or [run in Colab](https://colab.research.google.com/github/ome/omero-guide-python/). To run the notebooks either on [mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks) or [Colab](https://colab.research.google.com/github/ome/omero-guide-python/), the OMERO server you use will need to have [websockets support](https://docs.openmicroscopy.org/omero/latest/sysadmins/websockets.html) enabled.
+To run the notebooks, you can either build locally (see below), [run on mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks) or [run in Colab](https://colab.research.google.com/github/ome/omero-guide-python/). To run the notebooks either on [mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks) or [Colab](https://colab.research.google.com/github/ome/omero-guide-python/), the OMERO server you use will need to have [websockets support](https://docs.openmicroscopy.org/omero/latest/sysadmins/websockets.html) enabled.
 
 ## Run the scripts and notebooks locally
 
