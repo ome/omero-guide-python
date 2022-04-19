@@ -54,7 +54,7 @@ def load_binary_from_s3(id, resolution='4'):
 def analyze(t, c, z):
     plane = data[t, c, z, :, :]
     smoothed_image = dask_image.ndfilters.gaussian_filter(plane, sigma=[1, 1])
-    threshold_value = 0.75 * da.max(smoothed_image).compute()
+    threshold_value = 0.33 * da.max(smoothed_image).compute()
     threshold_image = smoothed_image > threshold_value
     label_image, num_labels = dask_image.ndmeasure.label(threshold_image)
     name = 't:%s, c: %s, z:%s' % (t, c, z)
