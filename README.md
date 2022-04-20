@@ -11,40 +11,39 @@ The documentation is deployed at [Use Python API](https://omero-guides.readthedo
 
 This guide demonstrates how to use the OMERO Python API.
 
-To run the notebooks, you can either build locally with [repo2docker](https://repo2docker.readthedocs.io/) or [run on mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks) or [run in Colab](https://colab.research.google.com/github/ome/omero-guide-python/). To run the notebooks either on [mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks) or [Colab](https://colab.research.google.com/github/ome/omero-guide-python/), the OMERO server you use will need to have [websockets support](https://docs.openmicroscopy.org/omero/latest/sysadmins/websockets.html) enabled.
+To run the notebooks, you can either build locally (see below), [run on mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks) or [run in Colab](https://colab.research.google.com/github/ome/omero-guide-python/). To run the notebooks either on [mybinder.org](https://mybinder.org/v2/gh/ome/omero-guide-python/master?filepath=notebooks) or [Colab](https://colab.research.google.com/github/ome/omero-guide-python/), the OMERO server you use will need to have [websockets support](https://docs.openmicroscopy.org/omero/latest/sysadmins/websockets.html) enabled.
 
 ## Run the scripts and notebooks locally
 
-Building locally using ``repo2docker``:
+* Building locally using ``repo2docker``:
 
- * Install [Docker](https://www.docker.com/) if required
- * Create a virtual environment and install repo2docker from PyPI.
- * Clone this repository
- * Run ``repo2docker``. 
- * Depending on the permissions, you might have to run the command as an admin
+   * Install [Docker](https://www.docker.com/) if required
+   * Create a virtual environment and install repo2docker from PyPI.
+   * Clone this repository
+   * Run ``repo2docker``. 
+   * Depending on the permissions, you might have to run the command as an admin
+   * Run the commands:
 
-Running the commands:
+    ```
+    pip install jupyter-repo2docker
+    git clone https://github.com/ome/omero-guide-python.git
+    cd omero-guide-python
+    repo2docker .
+    ```
 
-```
-pip install jupyter-repo2docker
-git clone https://github.com/ome/omero-guide-python.git
-cd omero-guide-python
-repo2docker .
-```
+* Building locally using ``conda`` and ``Jupyter``:
 
-Building locally using conda and Jupyter:
+    * Create a conda environment i.e. ``conda env update -n stardist -f binder/environment.yml``
+    * Activate the newly created environment
 
- * Create a conda environment i.e. ``conda env update -n stardist -f binder/environment.yml``
- * Activate the newly created environment
-
-The following steps are only required if you want to run the notebooks
- * If you have Anaconda installed:
-   * Start Jupyter from the Anaconda-navigator
-   * Select the notebook you wish to run and select the ``Kernel>Change kernel>Python [conda env:stardist]``
- * If Anaconda is not installed:
-   * In the environment, install ``jupyter`` e.g. ``pip install jupyter``
-   * Add the virtualenv as a jupyter kernel i.e. ``ipython kernel install --name "stardist" --user``
-   * Open jupyter notebook i.e. ``jupyter notebook`` and select the ``stardist`` kernel or ``[conda env:stardist]`` according to what is available
+    The following steps are only required if you want to run the notebooks
+    * If you have Anaconda installed:
+        * Start Jupyter from the Anaconda-navigator
+        * Select the notebook you wish to run and select the ``Kernel>Change kernel>Python [conda env:stardist]``
+    * If Anaconda is not installed:
+        * In the environment, install ``jupyter`` e.g. ``pip install jupyter``
+        * Add the virtualenv as a jupyter kernel i.e. ``ipython kernel install --name "stardist" --user``
+        * Open jupyter notebook i.e. ``jupyter notebook`` and select the ``stardist`` kernel or ``[conda env:stardist]`` according to what is   available
 
 
 See also [setup.rst](https://github.com/ome/omero-guide-python/blob/master/docs/setup.rst)
