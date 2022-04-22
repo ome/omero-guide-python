@@ -11,7 +11,7 @@ dependencies:
   - pip:
     - ome-zarr
     - dask-image
-    - stardist
+    - stardist==0.8.1
     # dependency used to convert the OMERO masks into numpy array
     - omero-cli-zarr
     # dependency to save the labels as geojson file
