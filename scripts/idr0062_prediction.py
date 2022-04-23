@@ -125,10 +125,10 @@ def predict(data, model):
     """
 
     axis_norm = (0,1)
-    img = normalize(data[0, 0, :, :, :], 1,99.8, axis=axis_norm)
+    c = 1
+    img = normalize(data[0, c, :, :, :], 1,99.8, axis=axis_norm)
     results = []
     shapes = []
-    c = 0
     for i in range(len(img)):
         new_labels, details = model.predict_instances(img[i])
         # Convert into Polygon and add to Geometry Collection
