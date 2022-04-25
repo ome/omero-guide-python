@@ -1,3 +1,9 @@
+0.3.0 (April 2022)
+------------------
+
+- Add notebook to analyze data from idr0062 using Stardist.
+- Improve installation instructions.
+
 0.2.0 (Feb 2022)
 ----------------
 
