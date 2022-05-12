@@ -112,7 +112,7 @@ def load_labels_as_masks(conn, image):
 # Load-Model
 def load_model():
     """
-    Load an existing model from Stardist
+    Load an existing model from StarDist
     """
     return StarDist2D.from_pretrained('2D_demo')
 
@@ -186,7 +186,7 @@ def main():
         data = load_binary_from_server(image)
         labels = load_labels_as_masks(conn, image)
 
-        # Load the Stardist model
+        # Load the StarDist model
         model = load_model()
 
         # Predict using the loaded model
