@@ -38,9 +38,7 @@ Then follow the instructions that are printed after the Docker image is built.
 
 
 Finally, if you would like to install the necessary requirements locally,
-we suggest using conda:
-
-Install Anaconda https://www.anaconda.com/products/individual#Downloads
+we suggest using conda.
 
 Then, create the environment:
 
