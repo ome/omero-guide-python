@@ -27,21 +27,7 @@ Step-by-Step
 In this section, we go through the steps required to analyze the data.
 The script used in this document is :download:`public_s3_segmentation_parallel.py <../scripts/public_s3_segmentation_parallel.py>`.
 
-Connect to the server:
-
-.. literalinclude:: ../scripts/public_s3_segmentation_parallel.py
-    :start-after: # Connect
-    :end-before: # Load-image
-
-
-Load the image:
-
-.. literalinclude:: ../scripts/public_s3_segmentation_parallel.py
-    :start-after: # Load-image
-    :end-before: # Load-binary
-
-
-Create a dask array from the Zarr storage format:
+Load the image and reate a dask array from the Zarr storage format:
 
 .. literalinclude:: ../scripts/public_s3_segmentation_parallel.py
     :start-after: # Load-binary
@@ -66,13 +52,6 @@ We are now ready to run in parallel using the default number of workers see `Con
 
 .. literalinclude:: ../scripts/public_s3_segmentation_parallel.py
     :start-after: # Compute
-    :end-before: # Disconnect
-
-
-When done, close the session:
-
-.. literalinclude:: ../scripts/public_s3_segmentation_parallel.py
-    :start-after: # Disconnect
     :end-before: # main
 
 In order to use the methods implemented above in a proper standalone script:
