@@ -19,5 +19,6 @@ jobs:
         uses: mamba-org/provision-with-micromamba@v15
         with:
           environment-file: binder/environment.yml
+          environment-name: binder
           extra-specs: |
             python=3.9
