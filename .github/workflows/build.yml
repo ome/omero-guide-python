@@ -11,7 +11,10 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -20,5 +23,3 @@ jobs:
         with:
           environment-file: binder/environment.yml
           environment-name: binder
-          extra-specs: |
-            python=3.9
