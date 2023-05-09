@@ -8,7 +8,6 @@ dependencies:
   # ome: minimal dependencies required to use the Python API
   - omero-py
   - pandas
-  - tensorflow
   - scikit-image
   - pip:
     - ome-zarr
