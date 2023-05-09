@@ -1,0 +1,23 @@
+# Builds the repository using mamba
+
+---
+name: build
+
+on: 
+  push:
+  pull_request:
+  schedule:
+      - cron: '0 0 * * 0'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - name: Install Conda environment with Micromamba
+        uses: mamba-org/provision-with-micromamba@v15
+        with:
+          environment-file: binder/environment.yml
+          extra-specs: |
+            python=3.9
