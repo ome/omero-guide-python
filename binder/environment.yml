@@ -18,3 +18,4 @@ dependencies:
     - omero-cli-zarr
     # dependency to save the labels as geojson file
     - geojson
+    - tensorflow==2.6.*
