@@ -1,0 +1,25 @@
+# Builds the repository using mamba
+
+---
+name: build
+
+on: 
+  push:
+  pull_request:
+  schedule:
+      - cron: '0 0 * * 0'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - name: Install Conda environment with Micromamba
+        uses: mamba-org/provision-with-micromamba@v15
+        with:
+          environment-file: binder/environment.yml
+          environment-name: binder
