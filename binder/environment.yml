@@ -1,6 +1,5 @@
 channels:
   - conda-forge
-  - ome
 dependencies:
   - python==3.9.*
   - conda-forge::zeroc-ice==3.6.5
