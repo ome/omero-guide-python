@@ -7,6 +7,7 @@ dependencies:
   - distributed==2022.2.0
   - pip
   - pip:
+    - pooch==1.8.1
     - omero-py==5.19.2
     - scikit-image==0.22.0
     - pandas==2.2.2
@@ -16,7 +17,3 @@ dependencies:
     - stardist==0.8.5
     # dependency used to convert the OMERO masks into numpy array
     - omero-cli-zarr==0.5.5
-    # dependency to save the labels as geojson file
-    - geojson==3.1.0
-    - tensorflow-macos==2.12.0; platform_system == "Darwin"
-    - tensorflow==2.12.0; platform_system != "Darwin"
