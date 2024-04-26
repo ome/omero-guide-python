@@ -3,7 +3,7 @@ channels:
   - ome
 dependencies:
   - python==3.9.*
-  - ome::zeroc-ice36-python==3.6.5
+  - conda-forge::zeroc-ice==3.6.5
   - distributed==2022.2.0
   - pip
   - pip:
