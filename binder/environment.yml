@@ -1,22 +1,22 @@
 channels:
   - conda-forge
+  - ome
 dependencies:
-  - python=3.9
-  - dask
-  - distributed
+  - python==3.9.*
+  - distributed==2022.2.0
   - pip
-  # ome: minimal dependencies required to use the Python API
-  - omero-py
-  - pandas
-  - scikit-image
   - pip:
+    - omero-py==5.19.2
+    - scikit-image==0.22.0
+    - pandas==2.2.2
     - jupyter==1.0.0
-    - ome-zarr
-    - dask-image
-    - stardist==0.8.1
+    - ome-zarr==0.8.3
+    - dask-image==2023.8.1
+    - stardist==0.8.5
     - keras==2.6
     # dependency used to convert the OMERO masks into numpy array
-    - omero-cli-zarr
+    - omero-cli-zarr==0.5.5
     # dependency to save the labels as geojson file
-    - geojson
-    - tensorflow==2.6.*
+    - geojson==3.1.0
+    - tensorflow-macos==2.12.0; platform_system == "Darwin"
+    - tensorflow==2.12.0; platform_system != "Darwin"
