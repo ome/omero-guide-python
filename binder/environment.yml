@@ -13,7 +13,6 @@ dependencies:
     - ome-zarr==0.8.3
     - dask-image==2023.8.1
     - stardist==0.8.5
-    - keras==2.6
     # dependency used to convert the OMERO masks into numpy array
     - omero-cli-zarr==0.5.5
     # dependency to save the labels as geojson file
