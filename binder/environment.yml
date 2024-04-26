@@ -10,6 +10,7 @@ dependencies:
   - pandas
   - scikit-image
   - pip:
+    - jupyter==1.0.0
     - ome-zarr
     - dask-image
     - stardist==0.8.1
