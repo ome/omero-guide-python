@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 #
-# Copyright (c) 2022 University of Dundee.
+# Copyright (c) 2022-2024 University of Dundee.
 #
 #   Redistribution and use in source and binary forms, with or without modification, 
 #   are permitted provided that the following conditions are met:
@@ -27,19 +27,18 @@
 #
 
 import numpy
+import re
 
 # omero
 from omero.gateway import BlitzGateway
 from omero_zarr import masks
 
-# stardist
-from stardist.models import StarDist2D
-from csbdeep.utils import normalize
+# cellpose
+from cellpose import io, models, utils
 
 # geojson
 from geojson import Feature, FeatureCollection, Polygon
 import geojson
-
 
 # Connect to the server
 def connect(hostname, username, password):
@@ -112,53 +111,53 @@ def load_labels_as_masks(conn, image):
 # Load-Model
 def load_model():
     """
-    Load an existing model from StarDist
+    Load an existing model from Cellpose
     """
-    return StarDist2D.from_pretrained('2D_demo')
+    return models.Cellpose(gpu=False, model_type='cyto')
 
 
 # Predict and save the shapes as geojson.
-def predict(data, model):
+def predict(image_id, data, model, size_z):
     """
     Predict object probabilities and star-convex polygon distances
     Convert the generated labels into geojson
     """
 
-    axis_norm = (0,1)
-    c = 1
-    img = normalize(data[0, c, :, :, :], 1,99.8, axis=axis_norm)
-    results = []
+    channels = [[0, 1]]
+    t = 0
     shapes = []
-    for i in range(len(img)):
-        new_labels, details = model.predict_instances(img[i])
-        # Convert into Polygon and add to Geometry Collection
-        for obj_id, region in enumerate(details['coord']):
-            coordinates = []
-            x = region[1]
-            y = region[0]
-            for j in range(len(x)):
-                coordinates.append((float(x[j]), float(y[j])))
-            # append the first coordinate to close the polygon
-            coordinates.append(coordinates[0])
-            shape = Polygon(coordinates)
-            properties = {
-                "stroke-width": 1,
-                "z": i,
-                "c": c,
-            }
-            shapes.append(Feature(geometry=shape, properties=properties))    
-        results.append(new_labels)
+    for z in range(size_z):
+        cellpose_masks, flows, styles, diams = model.eval(data[t, :, z, :, :], diameter=None, channels=channels)
+        outlines = utils.outlines_list(cellpose_masks)
+        name = str(image_id) + "_" + str(z)
+        io.outlines_to_text(name, outlines)
+        with open(name + "_cp_outlines.txt", "r") as text_file:
+            for line in text_file:
+                points = re.sub(r',([^,]*),', r',\1, ', line)
+                splited = re.split('\s+', points)
+                coordinates = []
+                for value in splited:
+                    point = re.split(',', value)
+                    if len(point) > 1:
+                        coordinates.append((float(point[0]), float(point[1])))
+                # append the first coordinate to close the polygon
+                coordinates.append(coordinates[0])
+                shape = Polygon(coordinates)
+                properties = {
+                    "stroke-width": 1,
+                    "z": z,
+                }
+                shapes.append(Feature(geometry=shape, properties=properties))
 
-    label_slices = numpy.array(results)
     gc = FeatureCollection(shapes)
-    return label_slices, gc
+    return gc
 
 
 def save_labels_as_geojson(gc, image_id):
     """
     Save the labels locally
     """
-    geojson_file = "stardist_shapes_%s.geojson" % image_id
+    geojson_file = "cellpose_shapes_%s.geojson" % image_id
     geojson_dump = geojson.dumps(gc, sort_keys=True)
     with open(geojson_file, 'w') as out:
         out.write(geojson_dump)
@@ -186,12 +185,13 @@ def main():
         data = load_binary_from_server(image)
         labels = load_labels_as_masks(conn, image)
 
-        # Load the StarDist model
+        # Load the Cellpose model
         model = load_model()
 
         # Predict using the loaded model
-        # Prediction done on the first channel
-        stardist_labels, gc = predict(data, model)
+        # number of z sections to analyse
+        z = 2 # max is the number of z sections
+        gc = predict(image_id, data, model, z)
 
         # Save the labels as geojson
         save_labels_as_geojson(gc, image_id)
