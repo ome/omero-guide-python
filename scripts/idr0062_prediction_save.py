@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 #
-# Copyright (c) 2022 University of Dundee.
+# Copyright (c) 2022-2024 University of Dundee.
 #
 #   Redistribution and use in source and binary forms, with or without modification, 
 #   are permitted provided that the following conditions are met:
@@ -26,6 +26,7 @@
 # Version: 1.0
 #
 
+import re
 import numpy
 
 # omero
@@ -34,9 +35,9 @@ import omero.clients
 from omero.gateway import BlitzGateway
 from getpass import getpass
 
-# stardist
-from stardist.models import StarDist2D
-from csbdeep.utils import normalize
+# cellpose
+from cellpose import io, models, utils
+
 
 
 # Connect to the server
@@ -110,56 +111,39 @@ def load_labels_as_masks(conn, image):
 # Load-Model
 def load_model():
     """
-    Load an existing model from StarDist
+    Load an existing model from Cellpose
     """
-    return StarDist2D.from_pretrained('2D_demo')
+    return models.Cellpose(gpu=False, model_type='cyto')
 
 
-# Predict and save the shapes as geojson.
-def predict(data, model):
+# Predict object probabilities
+def predict(image, data, model, size_z):
     """
     Predict object probabilities and star-convex polygon distances
-    Convert the generated labels into geojson
+    Save the lqbels back to the server as OME ROIs
     """
 
-    axis_norm = (0,1)
-    c = 1
-    img = normalize(data[0, c, :, :, :], 1,99.8, axis=axis_norm)
-    results_details = []
-    for i in range(len(img)):
-        new_labels, details = model_versatile.predict_instances(img[i])
-        results_details.append(details)
-
-    return results_details
-
-
-def save_labels_in_omero(conn, image, results_details):
-    """
-    Save the labels back to the server
-    """
-    c = 1
-
+    channels = [[0, 1]]
+    t = 0
     rois = []
-    for i in range(len(results_details)):
-        details = results_details[i]
-        roi = omero.model.RoiI()
-        roi.setImage(image._obj)
-        for obj_id, region in enumerate(details['coord']):
-            coordinates = []
-            x = region[1]
-            y = region[0]
-            for j in range(len(x)):
-                coordinates.append(str(float(x[j])) + "," + str(float(y[j])))
-            joined_string = ", ". join(coordinates)
-            polygon = omero.model.PolygonI()
-            polygon.theZ = omero.rtypes.rint(i)
-            polygon.theC = omero.rtypes.rint(c)
-            polygon.strokeWidth = omero.model.LengthI(2, omero.model.enums.UnitsLength.PIXEL)
-            polygon.points = omero.rtypes.rstring(joined_string)
-            polygon.textValue = omero.rtypes.rstring("stardist")
-            roi.addShape(polygon)
-            rois.append(roi)
-    conn.getUpdateService().saveCollection(rois)
+    for z in range(size_z):
+        cellpose_masks, flows, styles, diams = model.eval(data[t, :, z, :, :], diameter=None, channels=channels)
+        outlines = utils.outlines_list(cellpose_masks)
+        name = str(z)
+        io.outlines_to_text(name, outlines)
+        with open(name + "_cp_outlines.txt", "r") as text_file:
+            for line in text_file:
+                roi = omero.model.RoiI()
+                roi.setImage(image._obj)
+                points = re.sub(r',([^,]*),', r',\1, ', line)
+                polygon = omero.model.PolygonI()
+                polygon.theZ = omero.rtypes.rint(z)
+                polygon.strokeWidth = omero.model.LengthI(2, omero.model.enums.UnitsLength.PIXEL)
+                polygon.points = omero.rtypes.rstring(points)
+                polygon.textValue = omero.rtypes.rstring("cellpose")
+                roi.addShape(polygon)
+                rois.append(roi)
+    return rois
 
 # Disconnect
 def disconnect(conn):
@@ -183,16 +167,14 @@ def main():
         global data
         data = load_binary_from_server(image)
 
-        # Load the StarDist model
+        # Load the Cellpose model
         model = load_model()
 
         # Predict using the loaded model
-        # Prediction done on the first channel
-        stardist_labels  = predict(data, model)
-
-        # Save the labels back to the server
-        save_labels_in_omero(conn, image, stardist_labels)
-
+        # number of z sections to analyse
+        z = 2 # max is the number of z sections
+        rois  = predict(image, data, model, z)
+        conn.getUpdateService().saveCollection(rois)
 
     finally:
         disconnect(conn)
