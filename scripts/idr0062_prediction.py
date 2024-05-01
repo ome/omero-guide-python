@@ -149,8 +149,7 @@ def predict(image_id, data, model, size_z):
                 }
                 shapes.append(Feature(geometry=shape, properties=properties))
 
-    gc = FeatureCollection(shapes)
-    return gc
+    return FeatureCollection(shapes)
 
 
 def save_labels_as_geojson(gc, image_id):
