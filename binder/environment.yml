@@ -1,21 +1,21 @@
+name: omero-guide-python
 channels:
   - conda-forge
 dependencies:
-  - python=3.9
-  - dask
-  - distributed
+  - python==3.9.*
+  - conda-forge::zeroc-ice==3.6.5
+  - distributed==2022.2.0
   - pip
-  # ome: minimal dependencies required to use the Python API
-  - omero-py
-  - pandas
-  - scikit-image
   - pip:
-    - ome-zarr
-    - dask-image
-    - stardist==0.8.1
-    - keras==2.6
+    - matplotlib==3.8.4
+    - pooch==1.8.1
+    - omero-py==5.19.2
+    - scikit-image==0.22.0
+    - pandas==2.2.2
+    - jupyter==1.0.0
+    - ome-zarr==0.8.3
+    - dask-image==2023.8.1
+    - cellpose==3.0.7
+    - geojson==3.1.0
     # dependency used to convert the OMERO masks into numpy array
-    - omero-cli-zarr
-    # dependency to save the labels as geojson file
-    - geojson
-    - tensorflow==2.6.*
+    - omero-cli-zarr==0.5.5

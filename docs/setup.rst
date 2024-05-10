@@ -42,17 +42,13 @@ Install omero-py and additional packages for image analysis (see
 
     $ cd omero-guide-python
 
-- Create a programming environment using Conda::
-
-    $ conda create -n omeropy python=3.6
-
 - Install ``omero-py`` and other packages useful for demonstration purposes in order to connect to an OMERO server using an installation file::
 
-    $ conda env update -n omeropy --file binder/environment.yml 
+    $ mamba env create -f binder/environment.yml
 
 - Activate the environment::
 
-    $ conda activate omeropy
+    $ conda activate omero-guide-python
 
 *Option 2*
 ~~~~~~~~~~
