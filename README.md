@@ -17,19 +17,6 @@ This guide demonstrates how to use the OMERO Python API.
 The OMERO server used will need to have [websockets support](https://docs.openmicroscopy.org/omero/latest/sysadmins/websockets.html) enabled.
 
 
-
-### Running in Docker
-
-
-Alternatively, if you have Docker installed, you can use the [repo2docker](https://repo2docker.readthedocs.io/en/latest/)
-tool to run this repository as a local Docker instance:
-
-    $ git clone https://github.com/ome/omero-guide-python
-    $ cd omero-guide-python
-    $ repo2docker .
-
-Then follow the instructions that are printed after the Docker image is built.
-
 ### Running locally
 
 
