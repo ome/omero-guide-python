@@ -4,7 +4,7 @@ channels:
 dependencies:
   - python==3.12.*
   - conda-forge::zeroc-ice==3.6.5
-  - distributed==2022.2.0
+  - distributed==2026.3.0
   - pip
   - pip:
     - matplotlib==3.8.4
