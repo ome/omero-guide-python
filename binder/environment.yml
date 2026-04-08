@@ -2,20 +2,20 @@ name: omero-guide-python
 channels:
   - conda-forge
 dependencies:
-  - python==3.9.*
+  - python==3.12.*
   - conda-forge::zeroc-ice==3.6.5
-  - distributed==2022.2.0
+  - distributed==2026.3.0
   - pip
   - pip:
     - matplotlib==3.8.4
     - pooch==1.8.1
-    - omero-py==5.19.2
+    - omero-py==5.22.1
     - scikit-image==0.22.0
-    - pandas==2.2.2
+    - pandas==3.0.2
     - jupyter==1.0.0
-    - ome-zarr==0.8.3
+    - ome-zarr==0.14.0
     - dask-image==2023.8.1
     - cellpose==3.0.7
-    - geojson==3.1.0
+    - geojson==3.2.0
     # dependency used to convert the OMERO masks into numpy array
-    - omero-cli-zarr==0.5.5
+    - omero-cli-zarr==0.8.0
